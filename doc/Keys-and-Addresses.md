@@ -26,9 +26,13 @@ To generate the address, we start with the public key, we compute the SHA256 has
 
 The following is the address generation steps:
 1. fingerprint = RIPEMD160(SHA256(public key))
+
 2. data = prefix(version byte) + fingerprint
+
 3. checksum = SHA256(SHA256(data))
+
 4. data = data + FirstFourBytes(checksum)
+
 5. address = Base58Check(data)
 
 The following picture shows the above procedure.
