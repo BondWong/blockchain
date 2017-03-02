@@ -25,11 +25,11 @@ Digital keys (public key and private key) in bitcoin are stored and managed by t
 To generate the address, we start with the public key, we compute the SHA256 hash and then followed by a RIPEMD160 hash. The resulting number is a 160-bit long fingerprint. Next, we add a [version byte](https://en.bitcoin.it/wiki/List_of_address_prefixes) as prefix to the fingerprint. In the case of address generation, the version byte will be 0x00. After this, we apply SHA256 hash twice to the result we get from the previous step and take the first four bytes as checksum. After getting the checksum, we append it as postfix to our prefixed fingerprint. Finally, encode the whole data using Base58Check. 
 
 The following is the address generation steps:
-l. fingerprint = RIPEMD160(SHA256(public key))
-l. data = prefix(version byte) + fingerprint
-l. checksum = SHA256(SHA256(data))
-l. data = data + FirstFourBytes(checksum)
-l. address = Base58Check(data)
+1. fingerprint = RIPEMD160(SHA256(public key))
+2. data = prefix(version byte) + fingerprint
+3. checksum = SHA256(SHA256(data))
+4. data = data + FirstFourBytes(checksum)
+5. address = Base58Check(data)
 
 The following picture shows the above procedure.
 

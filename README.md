@@ -4,9 +4,9 @@ Bitcoin is revolutionary, decentralized crypto currency. It allows every around 
 This project is an article combining viewpoint of the article called "The Secret of Bitcoin and Blockchain" by Jian Zhang and my own understanding about bitcoin and blockchain.
 
 ## Table of Contents
-l. [Introduction to Bitcoin](doc/Introduction-to-Bitcoin.md)
-l. [Keys and Addresses](doc/Keys-and-Addresses.md)
-l. Bitcoin Transactions
-l. The Blockchain
-l. Blockchain Consensus
-l. The Complete Example of How Bitcoin Works
+1. [Introduction to Bitcoin](doc/Introduction-to-Bitcoin.md)
+2. [Keys and Addresses](doc/Keys-and-Addresses.md)
+3. Bitcoin Transactions
+4. The Blockchain
+5. Blockchain Consensus
+6. The Complete Example of How Bitcoin Works
