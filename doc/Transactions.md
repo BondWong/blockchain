@@ -8,6 +8,7 @@ It starts with the creation of a transaction. When we transfer bitcoins to other
 ## Transaction Structure
 The following table shows the structure of a transaction:
 Size       | Field          | Description
+---------- | -------------- | ------------
 4 bytes    | Version        | version of rules this transaction follow
 1~9 bytes  | Input Counter  | the number of input
 variable   | Inputs         | one or multiple transaction inputs
