@@ -22,3 +22,24 @@ From the structure, we can see that the most important parts of a transaction ar
 Now that we know that a transaction input is a UTXO. Let's redefine transaction input and output using UTXO term. A user's total number of bitcoins is the sum of all his UTXO. When he is going to spend some bitcoins, his UTXO will be used as a transaction inputs, and the transaction outputs are UTXO assigned to others or assigned back to himself as changes.
 
 ## Transaction Outputs and Inputs
+Transaction output consist of two parts: 1. an amount of bitcoin, 2. a locking-script. One can think of a transaction is a certain amount of bitcoin that are locked with a specific secret that only the new owner knows the secret and is able to unlock it. The locking script consisted by the output is the secret. The following table shows the structure of an output:
+
+Size | Field | Description
+---- | ----- | -----------
+8 bytes | Amount | The amount of bitcoin being transferred
+1~9 bytes | Locking-Script Size | :Locking-Script length in bytes
+Variable | Locking-Script | A script defining the conditions required to consume the bitcoins
+
+Transaction input consist of five parts: 1. output pointer, 2. unlocking-script. In a transaction, an input is a unspent transaction output. A transaction input uses output pointer to refer to UTXO. As mentioned before, a transaction output is locked by a secret that only the new user knows. In order to spend the output that the new user received, the new user needs to provide the locking-script with the secret. In here, the secret is the unlocking-script. The following table shows the structure of an input:
+
+Size | Field | Description
+---- | ----- | -----------
+32 bytes | Transaction Hash | The transaction id containing the UTXO the input pointing to
+4 bytes | Output Index | The index number of the UTXO in the pointed transaction
+1~9 bytes | Unlocking-Script Size | Unlocking-Script length in bytes
+Variable | Unlocking-Script | A script that fulfills the conditions in order to consume the bitcoins
+4 bytes | Sequence Number | Disable in current bitcoin
+
+The output pointer consists of transaction hash and output index. When they are using together, the input field can refer to the specific UTXO. Sequence number is currently unused in the bitcoin system.
+
+## Keys and Addresses in Transaction
