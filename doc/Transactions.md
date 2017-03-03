@@ -7,13 +7,13 @@ It starts with the creation of a transaction. When we transfer bitcoins to other
 
 ## Transaction Structure
 The following table shows the structure of a transaction:
-| Size | Field | Description |
-| ---- | ----- | ----------- |
-| 4 bytes | Version | version of rules this transaction follow |
-| 1~9 bytes | Input Counter | the number of input |
-| variable | Inputs | one or multiple transaction inputs |
-| 1~9 bytes | Output Counter | the number of output |
-| variable | Outputs | one or multiple transaction outputs |
-| 4 bytes | Locktime | a unix timestamp that one has to wait before adding it into a block |
+Size | Field | Description
+--- | --- | ---
+4 bytes | Version | version of rules this transaction follow
+1~9 bytes | Input Counter | the number of input
+variable | Inputs | one or multiple transaction inputs
+1~9 bytes | Output Counter | the number of output
+variable | Outputs | one or multiple transaction outputs
+4 bytes | Locktime | a unix timestamp that one has to wait before adding it into a block
 
 
