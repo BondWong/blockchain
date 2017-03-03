@@ -16,7 +16,7 @@ variable | Inputs | one or multiple transaction inputs
 variable | Outputs | one or multiple transaction outputs
 4 bytes | Locktime | a unix timestamp that one has to wait before adding it into a block
 
-First Header | Second Header
------------- | -------------
-Content Cell | Content Cell 
-Content Cell | Content Cell 
+First Header | Second Header | Third Header
+------------ | ------------- | ------------
+Content Cell | Content Cell  | Content Cell
+Content Cell | Content Cell  | Content Cell
