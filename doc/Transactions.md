@@ -64,7 +64,7 @@ Let's go back to Trumpy builds wwall example. Trumpy made a payment of 2 bitcoin
 
 To unlock a transaction output, the combination of unlocking script and locking script will be executed. The combination script has such form: unlocking script + locking script. The unlocking script will be executed first and then the locking script. If the final result is true, then the unlock process has succeeded. The following figure shows the execution of the combined script. 
 
-![Alt Text](images/script-execution1.png)
-![Alt Text](images/script-execution2.png)
+![Alt Text](i/images/script-execution1.png)
+![Alt Text](/images/script-execution2.png)
 
 
