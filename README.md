@@ -7,6 +7,6 @@ This project is an article combining viewpoint of the article called "The Secret
 1. [Introduction to Bitcoin](doc/Introduction-to-Bitcoin.md)
 2. [Keys and Addresses](doc/Keys-and-Addresses.md)
 3. [Transactions](doc/Transactions.md)
-4. The Blockchain
+4. [The Blockchain](doc/Blockchain.md)
 5. Blockchain Consensus
 6. The Complete Example of How Bitcoin Works
