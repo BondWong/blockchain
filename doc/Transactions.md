@@ -56,5 +56,15 @@ There are three kinds of transaction in bitcoin. They are standard transaction, 
 
 Let's go back to Trumpy builds wwall example. Trumpy made a payment of 2 bitcoins to Bob's address. The locking script of this transaction output looks like this:
 
-`OP_DUP OP_HASH160 <Bob's address>` OP_EQUAL OP_CEHCKSIG`
+`OP_DUP OP_HASH160 <Bob's public key hash> OP_EQUAL OP_CEHCKSIG`
+
+`<Bob's public key hash>` is not actually Bob's address, but it is equivalent to his address. After getting his bitcoins, Bob can provide with the following unlocking script to unlock the UTXO. 
+
+`<Bob's signature> <Bob's public key>`
+
+To unlock a transaction output, the combination of unlocking script and locking script will be executed. The combination script has such form: unlocking script + locking script. The unlocking script will be executed first and then the locking script. If the final result is true, then the unlock process has succeeded. The following figure shows the execution of the combined script. 
+
+![Alt Text](images/script-execution1.png)
+![Alt Text](images/script-execution2.png)
+
 
