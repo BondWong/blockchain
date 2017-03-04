@@ -64,7 +64,7 @@ Let's go back to Trumpy builds wwall example. Trumpy made a payment of 2 bitcoin
 
 To unlock a transaction output, the combination of unlocking script and locking script will be executed. The combination script has such form: unlocking script + locking script. The unlocking script will be executed first and then the locking script. If the final result is true, then the unlock process has succeeded. The following figure shows the execution of the combined script. 
 
-![Alt Text](i/images/script-execution1.png)
+![Alt Text](/images/script-execution1.png)
 ![Alt Text](/images/script-execution2.png)
 
-
+Once the transaction is created and signed with user's signature, it then will be propagated on bitcoin network. Only user with assigned address can use the bitcoin carried by the transaction. Before those bitcoins can be used, the transaction must be written into the blockchain. Next part, I will talk about the bitcoin network and blockchain.

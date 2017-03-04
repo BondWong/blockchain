@@ -40,4 +40,4 @@ The following picture shows the above procedure.
 
 ![Alt Text](/images/bitcoin-address-generation.png)
 
-With the addresses and private key, we can create transaction to spend or receive our bitcoins. In the next part, I will talk about bitcoin transactions.
+With the addresses and private key, we can create and sign transaction to spend or receive bitcoins. In the next part, I will talk about bitcoin transactions.
