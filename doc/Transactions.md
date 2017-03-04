@@ -54,4 +54,7 @@ The script executes by processing each item from left to right. When the current
 
 There are three kinds of transaction in bitcoin. They are standard transaction, spend coinbase, coinbase/generation. Zooming in, there are five types standard transaction. We only focus on the most common one -- Pay-to-Public-Key-Hash (P2PKH). In P2PKH, the locking script of an output is a bitcoin address, which can be unlocked by a digital signature of the new owner.
 
-Let's go back to Trumpy builds wwall example. 
+Let's go back to Trumpy builds wwall example. Trumpy made a payment of 2 bitcoins to Bob's address. The locking script of this transaction output looks like this:
+
+`OP_DUP OP_HASH160 <Bob's address>` OP_EQUAL OP_CEHCKSIG`
+
