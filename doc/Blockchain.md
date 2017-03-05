@@ -9,3 +9,13 @@ There are four types of node, and thus there are four kinds of service. They are
 ![Alt Text](/images/bitcoin-network.png)
 
 The above image shows nodes (yellow nodes) with functions other than those we've covered. Those are protocol servers. An example of this is the [pool](https://en.wikipedia.org/wiki/Mining_pool) protocol server that convert the pool protocol from and to bitcoin protocol (TCP/IP). 
+
+Before starting the blockchain, let's talk about network discovery of bitcoin node, which I found very interesting. 
+
+A new node must discover and connect at least one node on the network so that it can join the network. The connection between nodes are done via a TCP three-ways-handshake. The new node starts the handshake by sending a version message containing the protocol version, a list of services supported by the new node, the current time, remote node ip address, local ip address, the bitcoin software version and the height of the copy of the blockchain in this node to the peer. After getting the version message, the peer node response with a verack message and optionally a version message. After the new node gets the verack message, it also sends back a verack message. Finally, with the verack reaches to its peer, the handshake is finished and a connection between these two nodes is established. 
+/
+You may wonder how a new node finds peers. In the bitcoin network, there are seed nodes known by every bitcoin software. A seed node is a long-running reliable node. Once there are connections, the newly connected node will send to its neighbors an address message containing mapping from its address to its neighbors. The neighbors also will, in turn, send this address message to their neighbors, propagating it to the network. Besides, the newly connected node can also ask its neighbors for their address messages that maps their address to their neighbors so that it can find new peers to connect to. Connections between nodes are unreliable. Therefore, the address propagating and acquiring process happens periodically. In this way, a node can update its connection table and keep itself stay connected. 
+
+The last piece of the network discovery is recovering. There is nothing new in recovering, at least not much. During the recovery, a node will go through the whole processes of starting. But there is a difference. During the recovery, a node will first try to establish connection with the peers that it found before the connections lost. After this, if this node still can not establish a connection, it will try the seed nodes. 
+
+## The Block Structure
