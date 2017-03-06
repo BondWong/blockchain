@@ -17,7 +17,7 @@ Trumpy wants to buy a brick so that he can build a wall blocking others from ent
 
 ## Bitcoin Transaction
 
-Traditionally, a transaction means that we tell the trusted-third-party such as the bank that the owner authorized the transfer of his or her money to a new owner. Likewise, a bitcoin transaction tells the bitcoin network that the bitcoin’s owner authorized the transfer of some bitcoin to a new owner. Each transaction contains one or more inputs and one or more outputs. Inputs are the debts against a bitcoin account and outputs are credits to a bitcoin account. Summation of outputs of a transaction might be less than the inputs, and the difference would be a transaction fee.
+Traditionally, a transaction means that we tell the trusted-third-party such as the bank that the we authorized the transfer of our money to a new owner. Likewise, a bitcoin transaction tells the bitcoin network that the bitcoin’s owner authorized the transfer of some bitcoin to a new owner. Each transaction contains one or more inputs and one or more outputs. Inputs are the debts against a bitcoin account and outputs are credits to the new owner's bitcoin account. Summation of outputs of a transaction might be less than the inputs, and the difference would be a transaction fee for the miner who adds and maintains transaction in the blockchain.
 
 
 ![Alt text](/images/transaction-chain.png)
