@@ -19,3 +19,30 @@ You may wonder how a new node finds peers. In the bitcoin network, there are see
 The last piece of the network discovery is recovering. There is nothing new in recovering, at least not much. During the recovery, a node will go through the whole processes of starting. But there is a difference. During the recovery, a node will first try to establish connection with the peers that it found before the connections lost. After this, if this node still can not establish a connection, it will try the seed nodes. 
 
 ## The Block Structure
+The following table shows the structure of a block:
+
+Size | Field | Description
+---- | ----- | -----------
+4 bytes | Block size | Block size in bytes
+80 bytes | Block header | Block header consists several fields
+1~9 bytes | Transaction count | The number of transactions in this block
+variable | Transactions | Transactions contained in this block
+
+Like a header in HTTP protocol, a block header contains many fields. There are four set of metadata. Firstly, the version filed that indicates the protocol version that this block uses. Secondly, the reference pointing to the previous block. Thirdly, proof-of-work meta data. This is a set of meta data related to the proof-of-work algorithm. The proof-of-work mechanism will be covered in next part when we talk about blockchain consensus. Finally, the merkle tree root. A merkle tree is a data structure that summarized transactions contained in a block. With the summary, one can easily figure out whether a transaction is included or not. The header structure shows as the following:
+
+Size | Field | Description
+---- | ----- | -----------
+4 bytes | Version | Version of protocol used by a block
+32 bytes | Previous Block Hash | A reference to the previous block
+32 bytes | Merkel Root | The root of merkel tree
+4 bytes | Timestamp | The creation time of the block
+4 bytes | Difficulty Target | The proof-of-work difficulty target of this block
+4 bytes | Nonce | The only changing parameter used in the proof-of-work algorithm 
+
+A block hash is the ID of a block. It is the result by hashing the block header twice using the SHA256 algorithm. 
+
+`previous block hash = SHA256(SHA256(previous block header))` 
+
+The block hash field is empty at the beginning when the block is created. It stays empty until it is about to be added to the blockchain. Till then, the block hash is calculated by each block when they received from the bitcoin network, before adding to their copy of the blockchain. Again, the detail of this process will be covered in next part. 
+
+
