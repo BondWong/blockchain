@@ -9,3 +9,17 @@ The consensus process involves a special kind of bitcoin node -- the miner. For 
 As other full nodes, a miner validate new transactions and add them to the new block it creates. Meanwhile, it competes with other miners by solving the proof-of-work algorithm. Miner that wins the competition has the right to add its block to the blockchain, earning itself transaction fees (difference between transaction inputs and outputs) from all the transaction contained in the block and mining fee for adding new block to the blockcain. 
 
 The mining process is also the money supply of the bitcoin system. It started with 50 bitcoins per block and halved by half after every 210,000 blocks are mined until the reward reduces to zero [satoshi](https://en.bitcoin.it/wiki/Satoshi_(unit) (1 bitcoin = 100,000,000 satoshi). The rewarding system attracts more miners and encourages them to compete with each others, increasing the computation power to the bitcoin network. The increasing computation power makes it harder and harder to attack the system. It is impossible for an individual attacker to attack the current bitcoin system since it would cost him/her so much to win the competition before doing any harm. An individual or a group must have over [51% of the computation power](http://bitcoin.stackexchange.com/questions/658/what-can-an-attacker-with-51-of-hash-power-do) to fail the system, which is very unlikely to happen.
+
+## The Four Processes
+According to [Andreas Antonopoulos](https://antonopoulos.com/), bitcoin's decentrailized consensus emerges from the independently occur of the following four processes: 
+
+1. Independent transactions verification by full nodes
+2. Independent new block mining by miners
+3. Independent new block verification by every node
+4. Independent selection of chain with most cumulative computation effort by every node
+
+Let's exam these processes one by one. 
+
+## Independent transaction verification by full nodes
+
+
