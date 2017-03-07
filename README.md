@@ -4,7 +4,7 @@ Bitcoin is revolutionary, decentralized crypto currency. It allows everyone arou
 
 The purpose of this project is to provide a blog series to help people understand the detail of the bitcoin system. At the beginning of my learning, I struggle to find blogs or posts to educate myself. However, I haven't find any. That's why I decide to write one. 
 
-This article is based on Jian Zhang's wonderful blog series -- ["The Secret of Bitcoin and the Blockchain" by Jian Zhang ](http://www.infoq.com/cn/articles/bitcoin-and-block-chain-part01), a great book -- [Mastering Bitcoin](http://shop.oreilly.com/product/0636920032281.do) by Andreas Antonopoulos, and my own understanding about the bitcoin system.
+This article is based on Jian Zhang's wonderful blog series -- ["The Secret of Bitcoin and the Blockchain"](http://www.infoq.com/cn/articles/bitcoin-and-block-chain-part01), a great book -- [Mastering Bitcoin](http://shop.oreilly.com/product/0636920032281.do) by Andreas Antonopoulos, and my own understanding about the bitcoin system.
 
 ## Table of Contents
 1. [Introduction to Bitcoin](doc/Introduction-to-Bitcoin.md)
