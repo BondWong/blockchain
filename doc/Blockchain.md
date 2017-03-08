@@ -34,9 +34,9 @@ Size | Field | Description
 ---- | ----- | -----------
 4 bytes | Version | Version of protocol used by a block
 32 bytes | Previous Block Hash | A reference to the previous block
-32 bytes | Merkel Root | The root of merkel tree
+32 bytes | Merkle Root | The root of merkle tree
 4 bytes | Timestamp | The creation time of the block
-4 bytes | Difficulty Target | The proof-of-work difficulty target of this block
+4 bytes | Difficulty Target | The proof-of-work difficulty target for this block
 4 bytes | Nonce | The only changing parameter used in the proof-of-work algorithm 
 
 ## Block ID
