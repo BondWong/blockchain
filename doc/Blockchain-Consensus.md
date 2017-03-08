@@ -51,6 +51,18 @@ Filing version field and timestamp filed are trivial. Filing others require some
 
 With all the fields ready, the miner begins fierce competition to mine a new block. Next, let's take a close look at the competition.
 
-## The Proof-Of-Work Algorithm
+## The Proof-of-Work Algorithm
 
+The proof-of-work is a proof of a someone has done certain amount of work before it can get reward. It is a very efficient way to verify that someone has done some jobs. In bitcoin system, the work is hashing. To be more specific, during the competition, a miner is hashing the new block header repeatedly by changing just one parameter. You guess it, that parameter is the nonce field in the block header. The miner keeps doing it until the hash result matches a specific target. Whoever finds the hash result first wins the competition. This is the process of mining and as well as how the proof-of-work algorithm works. But what is the specific target and why the verification of proof-of-work is very easy?
 
+### Hash Function
+
+Before we can answer these questions, let's have a basic understanding of hash function. The hash function has a very important role in proof-of-work algorithm, since the work itself is hashing. Hash function takes in a parameter x and gets back a hashed result y. X has arbitrary length while y is of fixed length. The complexity of a hash function is O(n). Bitcoin uses SHA256 as its mining function for the reason that SHA256 has three other important traits:
+
+1. No collision. Well, this is not necessarily true. SHA256 has 2^256 results. So if we do 2^256 + 1 times hashing, there must be a collision. Even worse, according to statistics, the possibility of collision within 2^130 hashing is 99%. So should we give up SHA256? No. Assume we have a computer that can calculate 10,000 hashes per second. It costs this computer 4 * 10^27 years to finish 2^130 hashes. You might not have any ideas about how large the number is. The years of doing hashing is 2 * 10^22 times of the total years of human exist on earth. That means that even if you started doing hashing at the first day we were on earth till now, the possibility of collision is very very small.
+
+2. Irreversible. With SHA256, one can hash x into y but not the other way around. At least it is impossible arithmetically. Unless you create a large table mapping every possible x wish its hashed y.
+
+3. There is no better ways than iteration to locate the range of hashing result. 
+
+### A Simplified Proof-of-Work Example
