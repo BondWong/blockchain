@@ -20,6 +20,18 @@ According to [Andreas Antonopoulos](https://antonopoulos.com/), bitcoin's decent
 
 Let's exam these processes one by one. 
 
-## Independent transaction verification by full nodes
+## Independent Transaction Verification by Full Nodes
 
+A transaction is created when by collecting UTXO, providing unlocking script and constructing new outputs assigned to new owner. The transaction will then be forward to peers of the node creates it. Before forwarding the transaction further, the peer nodes will verify the transaction independently so that invalid transaction will not be propagated. Invalid transaction can be those that uses wrong unlocking script or larger output than input, etc. You can find the whole checklist [here](https://en.bitcoin.it/wiki/Protocol_rules#.22tx.22_messages). 
 
+## Independent New Block Mining by Miners
+
+Miners compete with other miners to gain the right to add a new block to the blockchain, earning mining reward and transaction fee. The winner will sends the new block to the network, announcing the end of the current competition and the beginning of the next. That means when a miner receives a new block, it will stop competing and start a new one. 
+
+During a competition, a miner mainly does three things. Validating transactions and maintaining them in transaction pool in memory, Constructing and updating the block header of the new block, and competing with each other to win the editing right. 
+
+A miner validating transactions while competing with each other. After validating transactions, a miner will add them to transaction pool in memory, collecting transactions to prepare for adding the new block if the miner wins. Whenever it receives a new block, it will check all the transaction in the pool and remove those contained in the new block. Whatever transactions remain in the pool will be added to a new block created by the miner. 
+
+In order to get the reward and transaction fee, a miner will create a special transaction called generation transaction. Unlike a standard transaction, it does not need UTXO as inputs. Its has only one input called coinbase, creating bitcoin from nothing. The output assigns the bitcoins (mining reward + transaction fee) to the miner's address. 
+
+The miner also construct the block header. The following table is the header: (keep consistent with the previous one)
