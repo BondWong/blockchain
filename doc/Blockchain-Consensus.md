@@ -87,6 +87,23 @@ Now, we have a clear picture of the mining process. A miner constructs the new b
 
 As the newly mined block propagated to the network, each node verify the block based on a [checklist](https://en.bitcoin.it/wiki/Protocol_rules#.22block.22_messages). The independent verification of new blocks ensures that the miners can't cheat. Any wrong doing invalidates the block. 
 
-## Independent Selection of Chain With Most Cumulative Computation Effort by Every Node
+## Independent Selection of Chain With Most Cumulative Computation Efforts by Every Node
+
+The final step of the consensus process is adding the new block to the blockchain. This happens after validating a block. In reality, a full node does more than that. Actually, after validating a block, a full node puts a new block to one of the three places: the main chain of the blockchain, one of the branches of the blockchain, and the orphans pool. 
+
+I know you are confusing. Let's talk more about this. The blockchain is not like a line segment contains root to the latest node. It is, in fact, a tree like structure that has branches.
+![Alt Text](/images/blockchain.png)
+
+The main chain is the chain that has the most cumulative computation efforts, that is, forming this chain requires most proof of work. Those branches are secondary chains in the blockchain. You will see why would those branches exist shortly when we dive deeper. Once a branch is formed, it will be kept in the blockchain as a valid chain, in case one of the branches is extended and exceed the current main chain. 
+
+When a full node receives a new block, it will search for its parent by looking at the "previous block hash" filed, which refers to the parent block. Most of the time, the parent is the latest one of the main chian. But sometimes, the parent block is not found. That means the parent block is also a new block and arrives late. In this case, the new block that has no parent will be put into the orphan pool, waiting for its parent block to arrive. Once the parent block is added to the blockchain, the orphan will be popped out and added to the blockchain.
+
+Now, let's see why would branches exist and how a main chain is resolved among branches.
+
+### Blockchain Branches and Main Chain Selection
+
+In the bitcoin network, every full node has a full copy of the blockchain. In a network as large as bitcoin's, inconsistency is inevitable. The result is that every full node has its own version of blockchain. A branch is form due to the temporary inconsistency among the network. To resolve the inconsistency, each node only extends the chain with the most proof of work. Therefore, with more and more blocks are added to one of the branches, a main chain is found, resolving the temporary inconsistency. Waiting for the main chain is another branch. Inconsistencies will always occur, as long as all nodes select the most cumulative proof of work chain, the whole bitcoin network will eventually converges to a consistent state again. 
+
+Andreas Antonopoulos provides a good example of the occur of inconsistency and the re-convergence. 
 
 
