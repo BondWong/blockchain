@@ -65,4 +65,18 @@ Before we can answer these questions, let's have a basic understanding of hash f
 
 3. There is no better ways than iteration to locate the range of hashing result. 
 
-### A Simplified Proof-of-Work Example
+### How the Proof-of-Work algorithm works
+
+In the simplest form of proof-of-work algorithm, there are at least a sender and receiver. The sender works very hard to solve a mathematical problem till it finds the solution. And then send the solution to receiver who will verify the answer.
+
+![Alt Text](/images/proof-of-work.png)
+
+Let's look at an example (provided by Andreas Antonopoulos) to get a basic understanding of the mathematical problem that the sender, in our case, the miner, is trying to solve. Assume we have a string of "I am Satoshi Nakamoto" and a nonce started with zero. Our goal is to repeatedly hash the string ended with the nonce by changing the nonce value until we have a result that meets the criteria. The criteria could be anything, but to make this example seems more realistic, let's assume the criteria is a string starts with zero. The following is the output of a program trying to find the result that meets the criteria:
+
+![Alt Text](/images/program.png)
+
+We can see that when nonce equals to 13, we have the solution. In numerical terms, a result starts with zero is a value less than 0x1000000000000000000000000000000000000000000000000000000000000000. In bitcoin, this threshold the target. It is easy to conclude that if we reduce the target, finding the solution will be more difficult. It is also very easy for others to verify that 13 is the solution. A receiver only need to append 13 to its "I am Satoshi Nakamoto" string to verify it. 
+
+Bitcoin's proof-of-work algorithm works pretty much list this one. A miner repeatedly hashes the new block header by changing the nonce field of the header until the result is smaller than the target. There are still missing pieces. How is the target set? Checking the source codes, we can find out that the target is defined by such equation: `target = 2^(256 - difficulty)`. That leas us to another question. How the difficulty is set? 
+
+In bitcoin, the difficulty is the difficulty target field in a bitcoin header. It is a dynamic value that is adjusted accordingly by a miner. Every miner adjusts their own difficulty independently based on the same principle -- a new block will be mined every 10 minutes on average in the bitcoin network. The adjustment happens after 2,016 blocks are mined, using the following equation. `New Difficulty = Old Difficulty * (Actual Time of Last 2016 Blocks / 20160 minutes)`. 20160 minutes is an ideal situation where the total time needed to mine 2016 blocks. By comparing with 20160 minutes, the difficulty is adjusted accordingly (If the mining is faster than 10 minutes, the difficulty increases, resulting in the reduce of the target. If it is slower, the difficulty decreases, resulting in the increase of the target). 
