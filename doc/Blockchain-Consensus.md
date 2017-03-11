@@ -108,21 +108,21 @@ Andreas Antonopoulos provides a good example of the occur of inconsistency and t
 
 As shown below, the whole bitcoin network has a consistent version of the blockchain. Block P in blue is the latest block of the blockchain.
 
-![Alt Text](Before-the-Fork.png)
+![Alt Text](/images/Before-the-Fork.png)
 
 The form of new branch is the result of inconsistency. Inconsistency happens whenever more than one candidate blocks competing to form the longest chain. This is possible as long as multiple miners solve the proof-of-work algorithm almost at the same time. To make thing simple, we only consider the situation that two miners find a solution at nearly the same time. As a result, as shown in the following feature, a part of the network sees a candidate block first while another part sees another candidate block. 
 
-![Alt Text](Forking.jpg)
+![Alt Text](/images/Forking.jpg)
 
 From the above image, we can see that the red part of the network sees a candidate block first. Assume this is block A. They use block A to extent the longest chain. The green part network sees another block (block B), forming their own longest chain. As the propagation goes on, there are two versions of blockchain existing in the network.
 
-![Alt Text](After-the-Fork.jpg)
+![Alt Text](/images/After-the-Fork.jpg)
 
 You might wonder why, for example, the red part nodes won't be affected by block B when they receive it. Normally, a full node will validate it and add it to the blockchain. But in this case, block B is invalidate to those nodes in the red part of the network. Because, block B's "previous block hash" field points to block P, which is already been pointing to by block A. Therefore they ignore block B, resulting the temporary inconsistency among the network. 
 
 Now, let's see how the inconsistency is resolved. Assume a miner of the green part network win the proof-of-work competition and add a new block in pink called block X to the blockchain. 
 
-![Alth Text](Reconverging.jpg)
+![Alth Text](/images/Reconverging.jpg)
 
 Again, as the propagation goes on, block X is seen by nodes in both red network and green network. The green network nodes will simply extent their longest chain with block X, since block X points to block B. However, red network nodes now see two chains (blue-red chain and blue-green-pink chain). And they also know that blue-green-pink chain has more cumulative computation effort, as a result, they select the blue-green-pink chain as their main chain. 
 The arrival of the pink block is also an announcement of the beginning of the next competition. Miners immediately construct a new block, a block points to pink block, resulting in all miners giving up the blue-red chain. As the propagation sweeps the entire network, the blockchain re-converges on a single main chain and the inconsistency is gone.
