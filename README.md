@@ -7,7 +7,7 @@ The purpose of this project is to provide a blog series to help people understan
 This article is based on Jian Zhang's wonderful blog series -- ["The Secret of Bitcoin and the Blockchain"](http://www.infoq.com/cn/articles/bitcoin-and-block-chain-part01), a great book -- [Mastering Bitcoin](http://shop.oreilly.com/product/0636920032281.do) by Andreas Antonopoulos, and my own understanding about the bitcoin system.
 
 ## Table of Contents
-1. [Introduction to Bitcoin](doc/Introduction-to-Bitcoin.md)
+1. [What is Bitcoin](doc/What-is-Bitcoin.md)
 2. [Keys and Addresses](doc/Keys-and-Addresses.md)
 3. [Transactions](doc/Transactions.md)
 4. [The Blockchain](doc/Blockchain.md)
