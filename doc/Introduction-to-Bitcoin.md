@@ -28,8 +28,8 @@ In the next part, I will talk about the bitcoin key and address and their roles 
 
 ##Note
 
-This post is a part of the whole project ["Bitcoin and Blockchain"](https://github.com/JunbangHuang/blockchain), which with a purpose of helping people understand the detail of the bitcoin system without diving into any textbook.
+This post is a part of the whole project ["Bitcoin and Blockchain"](https://github.com/JunbangHuang/blockchain), which with a purpose of helping people understand the detail of the bitcoin system without diving into any textbooks.
 
 The view points of this project are mainly based on my own bitcoin system understanding, Jian Zhang' wonderful blog series -- ["The Secret of Bitcoin and the Blockchain"](http://www.infoq.com/cn/articles/bitcoin-and-block-chain-part01) and a great book -- [Mastering Bitcoin](http://shop.oreilly.com/product/0636920032281.do) by Andreas Antonopoulos. 
 
-This post is revised by [Xiayang Fan](https://www.linkedin.com/in/xiayang-fan-023465a8/)
+This post is revised by [Xiayang Fan](https://www.linkedin.com/in/xiayang-fan-023465a8/).
