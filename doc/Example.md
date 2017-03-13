@@ -13,6 +13,10 @@ After scanning the QRCode, Trumpy's bitcoin wallet software start constructing t
 As you can see from the above image, there are two outputs. One output is assigned to Bob's address and the other one is assigned back to Trumpy's address. The addresses are contained in the locking scripts in those two outputs. The sum of outputs is smaller than the input. The difference is transaction fee collected by miner. 
 
 Before sending this transaction, there is one more step that Trumpy's wallet software needs to do -- signing the transaction. Signing the transaction is actually signing the transaction input. The transaction input is an unspent transaction output locked by Trumpy's address. In order to spend it, the wallet software creates a unlocking script containing Trumpy's digital signature and adds it to the input. Finally, the transaction construction is completed and it is propagated onto the bitcoin network, waiting to be confirmed. 
+## Transaction validation 
+
+After being propagated by Trumpy's wallet software, the transaction assigning bitcoin to Bob will be validated by bitcoin nodes. One of the most important thing to check is that whether the input of this transaction is from an unspent transaction output assigned to Trumpy. From the previous section, we can see that Trumpy provides its unlocking script to unlock the UTXO. Inside the UTXO, there is a locking script. The unlocking script contains Trumpy's signature and public key. The locking script contains an address. Mathematically, the relationship between private key, public key and address is: public key = f(private key), address = g(public key). To verify the transaction, a node will check whether Trumpy's public key can generate the address. If it can, nodes will propagate this transaction further. Otherwise, nodes will ignore this transaction.
+
 ## Transaction confirmation
 
-
+ 
