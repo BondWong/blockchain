@@ -1,6 +1,6 @@
 # Bitcoin and Blockchain part VI:The Complete Example of How Bitcoin Works
 
-In this part, we extent our Trumpy-builds-wall example to get a better understand of all bitcoin concept we covered in previous parts.
+In this part, we extent our Trumpy-builds-wall example to get a better understanding of bitcoin system. This example is from angle of payment, which is the most common use case of bitcoin. Although we will cover most of the concepts we covered in previous pars, some of them might not be included in this example. We highly recommend to go through those parts again in detail.
 
 ## Pay with bitcoin
 
@@ -19,4 +19,22 @@ After being propagated by Trumpy's wallet software, the transaction assigning bi
 
 ## Transaction confirmation
 
- 
+There are special kinds of nodes in the bitcoin network called the miners. Miners compete with each other to solve the proof-of-work algorithm. Whoever wins the competition has the right to add a block to the blockchain. The new block from a winner also the announcement of the beginning of the next competition. 
+
+Ivanky is one of those miners who works very hard to solve the algorithm. While she is trying very hard to find the solution, she receives a new block from the network. She finds out this is a validate block. After adding to her copy of blockchain, she creates a new block, giving up the old competition. She also removes transactions that contained in the block she just received, because those transactions are already in the blockchain, which means that they are confirmed. In her new block header, she adds previous block hash pointing to the previous block in the blockchain. She also summaries the transactions she has collected so far into a merkle tree root and then adds it to the new block header. Besides, she also calculates the difficulty target of the proof-of-work algorithm based on the following equation:
+
+`difficulty = old difficulty * (actual time of last 2016 blocks / 20160 minutes), difficulty target = 2^(256 - difficulty)`
+
+Finally, she set nonce field in the block header to zero, being ready to compete with other miners.
+
+During the competition, Ivanky's specialized mining software hashes the whole block repeatedly by changing only the nonce randomly. Her goal is to find a hash result smaller than the difficulty target. Meanwhile, Ivanky receives Trumpy's transaction. Her mining software adds that transaction to the new block and updates the merkle tree root. Luckily, this time Ivanky wins the competition. Her mining software immediately propagate the new block onto the network, ending the war. 
+
+Every full node will validate the block containing Trumpy's transaction. If it is validate, it will be added to their copy of the blockchain and propagated further. It won't be long before several blocks were appended to that block since a new block is mined every ten minutes. Once that has happened, Trumpy's transaction is considered as confirmed. From this moment on, Bob can now spend his bitcoin receive from Trumpy.
+
+## Spends bitcoins
+
+Bob notices the transaction from Trumpy is confirmed. He is very happy and feels like wanting a beer. He, again, decides to pay with his bitcoin. The same payment story goes on again from the beginning of this part. His new transaction will start from the output of other transaction assigning bitcoins to him, forming a transaction chain.
+
+Not only the transactions form a chain, the blocks also form a chain, as known as the blockchain. Once a transaction is added to the blockchain, it is vert difficult to modify it or remove it. Because one has to compete with lots of miners to win the right to edit the blockchain. With more and more blocks are being appended to the blockchain, transactions in it will soon become permanent truths and the bitcoin system will gain more and more trust, making it a positive circle system. 
+
+Bitcoin is just one of the many application based on the blockchain technology. As potential a technology as blockchain, there are surely other applications based on it. And as saying by many, we are just at the beginning.
