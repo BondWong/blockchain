@@ -54,16 +54,16 @@ As mentioned earlier when we talked about the bitcoin network, a full copy of th
 
 ## Merkle Tree
 
-The bitcoin block uses merkle tree as a summary of all the transactions it contains. A merkle tree is a binary tree like data structure, which makes searching for data in the tree efficient. A merkle tree node contains cryptographic hashes of an item it summarizes, therefore it is also called binary hash tree. In our case, the merkle tree node contains the cryptographic hash of a transaction. The following image shows the creation of a merkle tree.
+The bitcoin block uses a merkle tree as a summary of all the transactions it contains. A merkle tree is a binary tree like data structure, which makes searching for data in the tree efficient. A merkle tree node contains cryptographic hashes of an item it summarizes, therefore it is also called a binary hash tree. In our case, the merkle tree node contains the cryptographic hash of a transaction. The following image shows the creation of a merkle tree.
 
 ![Alt Text](/images/merkle-tree.png)
 
-The above image is a four transaction merkle tree -- transaction A, B, C and D. To create a merkle tree, one can recursively hash pairs of nodes till the root. In bitcoin, the hash function is SHA256 algorithm. If we don't have an even number of nodes, the last node will be duplicated in order to make the number even. 
+The above image is a four transaction merkle tree -- transaction A, B, C and D. To create a merkle tree, one can recursively hash pairs of nodes till the root. In bitcoin, the hash function is the SHA256 algorithm. If we don't have an even number of nodes, the last node will be duplicated in order to make the number even. 
 
-In a merkle tree, proving a transaction is in a block is constructing an authentication path that connects the transaction hash to the root, which only needs to take log(n) hashes calculations. 
+In a merkle tree, we prove that a transaction is in a block by constructing an authentication path that connects the transaction hash to the root, which only needs to take log(n) hashes calculations. 
 
 ![Alt Text](/images/merkle-tree-proof.png)
 
 Let's see an example shown in the above image. A block contains the merkle tree root. To prove Hk (the green one) is in the merkle tree, one only needs to find the authentication path (the blue ones), which means only log(n) data need to be collected. Finally, calculate the root using the path and compare with the root in the block to find out whether a transaction is in the merkle tree or not.
 
-A transaction will be verified after being propagated and will be added to local block if it is valid. To confirm transactions, one more step is required. Adding the block containing transaction await to be confirmed to the blockchain. Next up, we will talk about how a block is added to the blockchain.
+A transaction will be verified after being propagated and will be added to the local block if it is valid. To confirm transactions, one more step is required. We must add the block containing the transaction which is awaiting to be confirmed to the blockchain. Next up, we will talk about how a block is added to the blockchain.
