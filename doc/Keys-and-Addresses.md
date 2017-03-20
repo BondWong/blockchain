@@ -44,7 +44,7 @@ The following picture shows the above procedure.
 With the addresses and private key generated, we can create and sign transaction to spend or receive bitcoins. In the next part, I will explain bitcoin transactions.
 
 
-##Note
+## Note
 
 This post is a part of the project called ["Bitcoin and Blockchain"](https://github.com/JunbangHuang/blockchain). Its purpose is to help people understand the detail of the bitcoin system without diving into any textbooks.
 
