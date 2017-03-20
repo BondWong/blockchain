@@ -12,4 +12,4 @@ This article is based on Jian Zhang's wonderful blog series -- ["The Secret of B
 3. [Transactions](doc/Transactions.md)
 4. [The Blockchain](doc/Blockchain.md)
 5. [Blockchain Consensus](doc/Blockchain-Consensus.md)
-6. [The Complete Example of How Bitcoin Works] (doc/Example.md)
+6. [The Complete Example of How Bitcoin Works](doc/Example.md)
