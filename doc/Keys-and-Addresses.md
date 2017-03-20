@@ -1,5 +1,5 @@
 # Bitcoin and Blockchain part II: Keys and Addresses
-Keys, addresses, transactions and the blockchain are the fundamental concepts of the bitcoin system. In this part, I will describe the cryptography (which includes use of keys) used in bitcoin, and the generation and usage of address.
+Keys, addresses, transactions and the blockchain are the fundamental concepts of the bitcoin system. In this part, we will describe the cryptography, which includes use of keys, used in bitcoin, and the generation and usage of address.
 
 ## A Brief History of Cryptography
 
@@ -41,7 +41,7 @@ The following picture shows the above procedure.
 
 ![Alt Text](/images/bitcoin-address-generation.png)
 
-With the addresses and private key generated, we can create and sign transaction to spend or receive bitcoins. In the next part, I will explain bitcoin transactions.
+With the addresses and private key generated, we can create and sign transaction to spend or receive bitcoins. In the next part, we will explain bitcoin transactions.
 
 
 ## Note
