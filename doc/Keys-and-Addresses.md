@@ -1,5 +1,5 @@
 # Bitcoin and Blockchain part II: Keys and Addresses
-Keys, addresses, transactions and the blockchain are the fundamental concepts of the bitcoin system. In this part, We will talk about the cryptography (includes use of keys) used in bitcoin, and the generation and usage of address.
+Keys, addresses, transactions and the blockchain are the fundamental concepts of the bitcoin system. In this part, I will describe the cryptography (which includes use of keys) used in bitcoin, and the generation and usage of address.
 
 ## A Brief History of Cryptography
 
@@ -9,7 +9,7 @@ In the 19th century, Auguste Kerckhoffs stated what is later called the Kerckhof
 
 As stated in Wikipedia, modern cryptography can be divided into several areas of study. The two main ones are symmetric-key cryptography and public-key cryptography, also known as asymmetric-key cryptography. Before the widely use of public-key cryptography, the symmetric-key cryptography was the mainstream cryptography method. In symmetric-key cryptography, both the sender and receiver share the same key. The sender uses the key to encrypt messages and send the encrypted messages together with the key to receivers so that the receivers can use the same key to decrypt the messages. The biggest problem is that you need to have a secure way to get the key to the receiver, which is quite hard to achieve sometimes. Because if we have a safe way to share the key, we probably don't need to be using encryption at the first place.
 
-In 1976, Whitfield Diffie and Martin Hellman published a groundbreaking paper of public-key cryptography. In public-key cryptography, a public key and a private key are used. Though they are different, they are mathematically related. A public key can only be constructed from its corresponding private key. From their names, we can easily know that a public key can be freely distributed while its paired private key must remain close to others. In such system, the public key is used for encryption and the private key is used for decryption.
+In 1976, Whitfield Diffie and Martin Hellman published a groundbreaking paper of public-key cryptography. In public-key cryptography, a public key and a private key are used. Although different, they are mathematically related. A public key can only be constructed from its corresponding private key. From their names, we can easily know that a public key can be freely distributed while its paired private key must remain close to others. In such system, the public key is used for encryption and the private key is used for decryption.
 
 In 1978, Ronald Rivest, Adi Shamir, and Len Adleman found the first public-key algorithm, known as RSA algorithm, the last piece of public-key cryptography. A public-key algorithm is used to create a public key from a random picked private key, and the reversing calculation from the public key to the private key is impossible. Other algorithms include elliptic curve based algorithm, which bitcoin uses. The development of public-key cryptography makes the digital signature become possible. A digital signature is easy to produce and is very hard for others to forge. The following picture shows the comparison between the symmetric-key cryptography and the asymmetric-key cryptography.
 
@@ -41,7 +41,7 @@ The following picture shows the above procedure.
 
 ![Alt Text](/images/bitcoin-address-generation.png)
 
-With the addresses and private key generated, we can create and sign transaction to spend or receive bitcoins. In the next part, I will talk about bitcoin transactions.
+With the addresses and private key generated, we can create and sign transaction to spend or receive bitcoins. In the next part, I will explain bitcoin transactions.
 
 
 ## Note
