@@ -50,4 +50,4 @@ This post is a part of the project called ["Bitcoin and Blockchain"](https://git
 
 The view points of this project are mainly based on my own bitcoin system understanding, Jian Zhang' wonderful blog series -- ["The Secret of Bitcoin and the Blockchain"](http://www.infoq.com/cn/articles/bitcoin-and-block-chain-part01) and a great book -- [Mastering Bitcoin](http://shop.oreilly.com/product/0636920032281.do) by Andreas Antonopoulos. 
 
-This post is revised by [Xiayang Fan](https://www.linkedin.com/in/xiayang-fan-023465a8/).
+This post is revised by [Xiayang Fan](https://www.linkedin.com/in/xiayang-fan-023465a8/) and [Reza Moradinezhad](https://www.linkedin.com/in/rezamora/).
