@@ -102,9 +102,9 @@ Now, let's see why would branches exist and how the main chain is resolved among
 
 ### Blockchain Branches and Main Chain Selection
 
-In the bitcoin network, every full node has a full copy of the blockchain. In a network as large as bitcoin's, inconsistency is inevitable. The result is that every full node has its own version of blockchain. A branch is formed due to the temporary inconsistency among the network. To resolve the inconsistency, each node only extends the chain with the most proof of work. Therefore, with more and more blocks are added to one of the branches, a main chain will be found eventually, resolving the temporary inconsistency. However, waiting for the main chain is another branch. Inconsistencies will always occur, as long as all nodes select the most cumulative proof of work chain, the whole bitcoin network will eventually converges to a consistent state again. 
+In the bitcoin network, every full node has a full copy of the blockchain. In a network as large as bitcoin's, inconsistency is inevitable. The result is that every full node has its own version of blockchain. A branch is formed due to the temporary inconsistency among the network. To resolve the inconsistency, each node only extends the chain with the most proof of work. Therefore, with more and more blocks added to one of the branches, a main chain will be found eventually, resolving the temporary inconsistency. However, waiting for the main chain is another branch. Inconsistencies will always occur. As long as all nodes select the most cumulative proof of work chain, the whole bitcoin network will eventually converge to a consistent state again. 
 
-Andreas Antonopoulos provides a good example of the occur of inconsistency and the re-convergence in his book. 
+Andreas Antonopoulos provides a good example of the occurence of inconsistency and the re-convergence in his book. 
 
 As shown below, the whole bitcoin network has a consistent version of the blockchain. Block P in blue is the latest block of the blockchain.
 
@@ -118,13 +118,13 @@ From the above image, we can see that the red part of the network sees a candida
 
 ![Alt Text](/images/After-the-Fork.jpg)
 
-You might wonder why, for example, the red part nodes won't be affected by block B when they receive it. Normally, a full node will validate it and add it to the blockchain. But in this case, block B is invalid to those nodes in the red part of the network. Because, block B's "previous block hash" field points to block P, which is already been pointing to by block A. Therefore they ignore block B, resulting in the temporary inconsistency among the network. 
+You might wonder why, for example, the red part nodes won't be affected by block B when they receive it. Normally, a full node will validate it and add it to the blockchain. But in this case, block B is invalid to those nodes in the red part of the network. This is because, block B's "previous block hash" field points to block P, which has already been pointied to by block A. Therefore they ignore block B, resulting in the temporary inconsistency among the network. 
 
-Now, let's see how the inconsistency is resolved. Assume a miner of the green part network win the proof-of-work competition and add a new block in pink called block X to the blockchain. 
+Now, let's see how the inconsistency is resolved. Assume a miner of the green part network wins the proof-of-work competition and adds a new block in pink called block X to the blockchain. 
 
 ![Alth Text](/images/Reconverging.jpg)
 
-Again, as the propagation goes on, block X is seen by nodes in both red network and green network. The green network nodes will simply extend their longest chain with block X since block X points to block B. However, red network nodes now see two chains (blue-red chain and blue-green-pink chain). And they also know that blue-green-pink chain has more cumulative computation effort, as a result, they select the blue-green-pink chain as their main chain. 
-The arrival of the pink block is also an announcement of the beginning of the next competition. Miners immediately construct a new block, a block points to pink block, resulting in all miners giving up the blue-red chain. As the propagation sweeps the entire network, the blockchain re-converges on a single main chain and the inconsistency is gone.
+Again, as the propagation goes on, block X is seen by nodes in both the red network and green network. The green network nodes will simply extend their longest chain with block X since block X points to block B. However, red network nodes now see two chains (blue-red chain and blue-green-pink chain). And they also know that blue-green-pink chain has more cumulative computation effort, as a result, they select the blue-green-pink chain as their main chain. 
+The arrival of the pink block is also an announcement of the beginning of the next competition. Miners immediately construct a new block which points to the pink block, resulting in all miners giving up the blue-red chain. As the propagation sweeps the entire network, the blockchain re-converges on a single main chain and the inconsistency is gone.
 
-The bitcoin network is in a dynamic state, going back and forth between inconsistency and convergence. However, thanks to the independent occurrences of four processes we covered in this part, they always can converge on a single main chain. Next part, we summarize all the bitcoin concepts we covered by extending the example of Trumpy builds the wall. 
+The bitcoin network is in a dynamic state, going back and forth between inconsistency and convergence. However, thanks to the independent occurrences of the four processes we covered in this part, they can always converge to a single main chain. Next part, we summarize all the bitcoin concepts we covered by extending the example of Trumpy builds the wall. 
