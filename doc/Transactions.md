@@ -81,7 +81,7 @@ To unlock a transaction output, the combination of the unlocking script and lock
 Once the transaction is created and signed with the user's signature, it will then be propagated onto the bitcoin network. Only the user with the assigned address can use the bitcoin carried by the transaction. Before those bitcoins can be used, the transaction must be written into the blockchain. Next part, we will talk about the bitcoin network and blockchain.
 
 
-##Note
+## Note
 
 This post is a part of the project called ["Bitcoin and Blockchain"](https://github.com/JunbangHuang/blockchain). Its purpose is to help people understand the detail of the bitcoin system without diving into any textbooks.
 
