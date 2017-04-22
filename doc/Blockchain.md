@@ -67,3 +67,11 @@ In a merkle tree, we prove that a transaction is in a block by constructing an a
 Let's see an example shown in the above image. A block contains the merkle tree root. To prove Hk (the green one) is in the merkle tree, one only needs to find the authentication path (the blue ones), which means only log(n) data need to be collected. Finally, calculate the root using the path and compare with the root in the block to find out whether a transaction is in the merkle tree or not.
 
 A transaction will be verified after being propagated and will be added to the local block if it is valid. To confirm transactions, one more step is required. We must add the block containing the transaction which is awaiting to be confirmed to the blockchain. Next up, we will talk about how a block is added to the blockchain.
+
+Note
+
+This post is a part of the project called "Bitcoin and Blockchain". Its purpose is to help people understand the detail of the bitcoin system without diving into any textbooks.
+
+The view points of this project are mainly based on my own bitcoin system understanding, Jian Zhang' wonderful blog series -- "The Secret of Bitcoin and the Blockchain" and a great book -- Mastering Bitcoin by Andreas Antonopoulos.
+
+This post is revised by Xiayang Fan.
