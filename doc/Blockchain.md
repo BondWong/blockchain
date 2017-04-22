@@ -68,7 +68,7 @@ Let's see an example shown in the above image. A block contains the merkle tree 
 
 A transaction will be verified after being propagated and will be added to the local block if it is valid. To confirm transactions, one more step is required. We must add the block containing the transaction which is awaiting to be confirmed to the blockchain. Next up, we will talk about how a block is added to the blockchain.
 
-Note
+##Note
 
 This post is a part of the project called "Bitcoin and Blockchain". Its purpose is to help people understand the detail of the bitcoin system without diving into any textbooks.
 
