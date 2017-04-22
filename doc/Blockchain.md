@@ -70,8 +70,8 @@ A transaction will be verified after being propagated and will be added to the l
 
 ## Note
 
-This post is a part of the project called "Bitcoin and Blockchain". Its purpose is to help people understand the detail of the bitcoin system without diving into any textbooks.
+This post is a part of the project called ["Bitcoin and Blockchain"](https://github.com/JunbangHuang/blockchain). Its purpose is to help people understand the detail of the bitcoin system without diving into any textbooks.
 
-The view points of this project are mainly based on my own bitcoin system understanding, Jian Zhang' wonderful blog series -- "The Secret of Bitcoin and the Blockchain" and a great book -- Mastering Bitcoin by Andreas Antonopoulos.
+The view points of this project are mainly based on my own bitcoin system understanding, Jian Zhang' wonderful blog series -- ["The Secret of Bitcoin and the Blockchain"](http://www.infoq.com/cn/articles/bitcoin-and-block-chain-part01) and a great book -- [Mastering Bitcoin](http://shop.oreilly.com/product/0636920032281.do) by Andreas Antonopoulos. 
 
-This post is revised by Xiayang Fan.
+This post is revised by [Xiayang Fan](https://www.linkedin.com/in/xiayang-fan-023465a8/).
