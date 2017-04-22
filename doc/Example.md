@@ -38,3 +38,11 @@ Bob notices the transaction from Trumpy is confirmed. He is very happy and wants
 Not only do the transactions form a chain, the blocks also form a chain, as known as the blockchain. Once a transaction is added to the blockchain, it is very difficult to modify it or remove it. Because one has to compete with lots of miners to win the right to edit the blockchain. With more and more blocks are being appended to the blockchain, transactions in it will soon become permanent truths and the bitcoin system will gain more and more trust, making it a positive circle system. 
 
 Bitcoin is just one of the many applications based on the blockchain technology. A technology with as much potential as the blockchain surely will have other applications based on it. And, as many are saying, we are just at the beginning.
+
+## Note
+
+This post is a part of the project called ["Bitcoin and Blockchain"](https://github.com/JunbangHuang/blockchain). Its purpose is to help people understand the detail of the bitcoin system without diving into any textbooks.
+
+The view points of this project are mainly based on my own bitcoin system understanding, Jian Zhang' wonderful blog series -- ["The Secret of Bitcoin and the Blockchain"](http://www.infoq.com/cn/articles/bitcoin-and-block-chain-part01) and a great book -- [Mastering Bitcoin](http://shop.oreilly.com/product/0636920032281.do) by Andreas Antonopoulos. 
+
+This post is revised by [Xiayang Fan](https://www.linkedin.com/in/xiayang-fan-023465a8/).
