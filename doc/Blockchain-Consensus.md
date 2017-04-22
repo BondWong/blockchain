@@ -128,3 +128,11 @@ Again, as the propagation goes on, block X is seen by nodes in both the red netw
 The arrival of the pink block is also an announcement of the beginning of the next competition. Miners immediately construct a new block which points to the pink block, resulting in all miners giving up the blue-red chain. As the propagation sweeps the entire network, the blockchain re-converges on a single main chain and the inconsistency is gone.
 
 The bitcoin network is in a dynamic state, going back and forth between inconsistency and convergence. However, thanks to the independent occurrences of the four processes we covered in this part, they can always converge to a single main chain. Next part, we summarize all the bitcoin concepts we covered by extending the example of Trumpy builds the wall. 
+
+## Note
+
+This post is a part of the project called ["Bitcoin and Blockchain"](https://github.com/JunbangHuang/blockchain). Its purpose is to help people understand the detail of the bitcoin system without diving into any textbooks.
+
+The view points of this project are mainly based on my own bitcoin system understanding, Jian Zhang' wonderful blog series -- ["The Secret of Bitcoin and the Blockchain"](http://www.infoq.com/cn/articles/bitcoin-and-block-chain-part01) and a great book -- [Mastering Bitcoin](http://shop.oreilly.com/product/0636920032281.do) by Andreas Antonopoulos. 
+
+This post is revised by [Xiayang Fan](https://www.linkedin.com/in/xiayang-fan-023465a8/).
