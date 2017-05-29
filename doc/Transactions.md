@@ -57,7 +57,7 @@ Note that bitcoin uses public-key cryptography. In this mechanism, the public ke
 
 
 ## Transaction Scripts
-The transaction script is written in a special script language. It is a [reverse-polish notation](https://en.wikipedia.org/wiki/Reverse_Polish_notation) [stack-based](https://en.wikipedia.org/wiki/Stack_(abstract_data_type) execution language. In bitcoin implementation, a locking script is called a scriptPubKey, and an unlocking script is called a scriptSig. The scriptPubKey contains an address to which the bitcoins will be assigned to. The scriptSig contains the new owner's signature, by providing which the new owner can unlock the UTXO and spend his bitcoins.
+The transaction script is written in a special script language. It is a [reverse-polish notation](https://en.wikipedia.org/wiki/Reverse_Polish_notation) [stack-based](https://en.wikipedia.org/wiki/Stack_(abstract_data_type)) execution language. In bitcoin implementation, a locking script is called a scriptPubKey, and an unlocking script is called a scriptSig. The scriptPubKey contains an address to which the bitcoins will be assigned to. The scriptSig contains the new owner's signature, by providing which the new owner can unlock the UTXO and spend his bitcoins.
 
 The script executes by processing each item from left to right. When a current item is a number, it is pushed into the stack. When the current item is an operator, numbers will be popped from the stack as parameters, of which the result will be pushed into the stack.
 
@@ -81,10 +81,10 @@ To unlock a transaction output, the combination of the unlocking script and lock
 Once the transaction is created and signed with the user's signature, it will then be propagated onto the bitcoin network. Only the user with the assigned address can use the bitcoin carried by the transaction. Before those bitcoins can be used, the transaction must be written into the blockchain. Next part, we will talk about the bitcoin network and blockchain.
 
 
-##Note
+## Note
 
 This post is a part of the project called ["Bitcoin and Blockchain"](https://github.com/JunbangHuang/blockchain). Its purpose is to help people understand the detail of the bitcoin system without diving into any textbooks.
 
-The view points of this project are mainly based on my own bitcoin system understanding, Jian Zhang' wonderful blog series -- ["The Secret of Bitcoin and the Blockchain"](http://www.infoq.com/cn/articles/bitcoin-and-block-chain-part01) and a great book -- [Mastering Bitcoin](http://shop.oreilly.com/product/0636920032281.do) by Andreas Antonopoulos. 
+The viewpoints of this project are mainly based on my own bitcoin system understanding, Jian Zhang' wonderful blog series -- ["The Secret of Bitcoin and the Blockchain"](http://www.infoq.com/cn/articles/bitcoin-and-block-chain-part01) and a great book -- [Mastering Bitcoin](http://shop.oreilly.com/product/0636920032281.do) by Andreas Antonopoulos. 
 
 This post is revised by [Xiayang Fan](https://www.linkedin.com/in/xiayang-fan-023465a8/).
