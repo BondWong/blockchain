@@ -57,7 +57,7 @@ Note that bitcoin uses public-key cryptography. In this mechanism, the public ke
 
 
 ## Transaction Scripts
-The transaction script is written in a special script language. It is a [reverse-polish notation](https://en.wikipedia.org/wiki/Reverse_Polish_notation) [stack-based](https://en.wikipedia.org/wiki/Stack_(abstract_data_type) execution language. In bitcoin implementation, a locking script is called a scriptPubKey, and an unlocking script is called a scriptSig. The scriptPubKey contains an address to which the bitcoins will be assigned to. The scriptSig contains the new owner's signature, by providing which the new owner can unlock the UTXO and spend his bitcoins.
+The transaction script is written in a special script language. It is a [reverse-polish notation](https://en.wikipedia.org/wiki/Reverse_Polish_notation) [stack-based](https://en.wikipedia.org/wiki/Stack_(abstract_data_type)) execution language. In bitcoin implementation, a locking script is called a scriptPubKey, and an unlocking script is called a scriptSig. The scriptPubKey contains an address to which the bitcoins will be assigned to. The scriptSig contains the new owner's signature, by providing which the new owner can unlock the UTXO and spend his bitcoins.
 
 The script executes by processing each item from left to right. When a current item is a number, it is pushed into the stack. When the current item is an operator, numbers will be popped from the stack as parameters, of which the result will be pushed into the stack.
 
