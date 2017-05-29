@@ -1,0 +1,29 @@
+{
+  "name": "blockchain",
+  "version": "1.0.0",
+  "description": "Bitcoin is revolutionary, decentralized cryptocurrency. It allows everyone around the world to trade without any involvement from traditional third parties such as bank, and governments. The most important thing of the bitcoin hype is that it leads us to a new era -- the internet of trust. The technology behind bitcoin making all this possible is called the blockchain. Bitcoin is just a tip of the iceberg of the application of the blockchain, and we are just at the beginning. To find other possible applications, we should understand the blockchain first.",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JunbangHuang/blockchain.git"
+  },
+  "keywords": [
+    "blockchain",
+    "bitcoin",
+    "javascript",
+    "nodejs"
+  ],
+  "author": "Bond <wongzeonbong@gmail.com> (Junbang)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JunbangHuang/blockchain/issues"
+  },
+  "homepage": "https://github.com/JunbangHuang/blockchain#readme",
+  "dependencies": {}
+}
