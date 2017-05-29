@@ -6,7 +6,7 @@ Bitcoin was invented in 2008, the year the world was suffering from the crisis. 
 
 
 ## Bitcoin and blockchain
-In history, there are few things as controversial as bitcoin. Supporters believe it is invaluable while detractors think it is valueless. Bitcoin is a decentralized crypto currency. What is important in bitcoin system is not bit nor coin, but a decentralized digital ledger. We call this ledger the blockchain. Like a physical ledger, a block in blockchain is like a page in the ledger, recording every transaction. Unlike the physical ledger, which is owned by organizations like governments or other financial companies and kept private from the public, the blockchain is open to the public and everyone in the bitcoin network owns a full copy of it. (This is not necessarily true since now a bitcoin node can own a partial copy of blockchain to work.) I will discuss this topic later in the blockchain part.
+In history, there are few things as controversial as bitcoin. Supporters believe it is invaluable while detractors think it is valueless. Bitcoin is a decentralized cryptocurrency. What is important in bitcoin system is not bit nor coin, but a decentralized digital ledger. We call this ledger the blockchain. Like a physical ledger, a block in blockchain is like a page in the ledger, recording every transaction. Unlike the physical ledger, which is owned by organizations like governments or other financial companies and kept private from the public, the blockchain is open to the public and everyone in the bitcoin network owns a full copy of it. (This is not necessarily true since now a bitcoin node can own a partial copy of blockchain to work.) I will discuss this topic later in the blockchain part.
 
 
 ## Bitcoin in a real-life example
