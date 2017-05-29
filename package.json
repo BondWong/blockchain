@@ -25,5 +25,8 @@
     "url": "https://github.com/JunbangHuang/blockchain/issues"
   },
   "homepage": "https://github.com/JunbangHuang/blockchain#readme",
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "jasmine": "^2.6.0"
+  }
 }
