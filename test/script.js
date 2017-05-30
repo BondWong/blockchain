@@ -17,7 +17,7 @@ describe('Script', function() {
       const msg = crypto.randomBytes(32)
       var sig = secp256k1.sign(msg, pvtKey);
 
-      var unlockingScript = script.createUnlockingScript(sig, pubKey);
+      var unlockingScript = script.createUnlockingScript(sig.signature, pubKey);
       var lockingScript = script.createLockingScript(pubKeyHash);
       assert.equal(script.execute(msg, unlockingScript, lockingScript)[0], true);
     })

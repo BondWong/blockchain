@@ -28,7 +28,9 @@ Script.prototype.setList = function(list) {
 
 function createLockingScript(pubKeyHash) {
   var script = new Script();
-  script.setList([OPTS.OP_DUP, OPTS.OP_HASH160, pubKeyHash, OPTS.OP_EQUAL, OPTS.OP_CHECKSIG]);
+  script.setList([Buffer.from(OPTS.OP_DUP), Buffer.from(OPTS.OP_HASH160),
+    pubKeyHash, Buffer.from(OPTS.OP_EQUAL), Buffer.from(OPTS.OP_CHECKSIG)
+  ]);
   return script;
 }
 
@@ -50,7 +52,7 @@ function execute(msg, unlockingScript, lockingScript) {
   stack.push(unlockingScript.get(0));
   stack.push(unlockingScript.get(1));
   lockingScript.getAll().forEach(function(ele) {
-    switch (ele) {
+    switch (ele.toString()) {
       case OPTS.OP_DUP:
         stack.push(stack[stack.length - 1]);
         break;
@@ -69,7 +71,7 @@ function execute(msg, unlockingScript, lockingScript) {
       case OPTS.OP_CHECKSIG:
         var pubKey = stack.pop();
         var sig = stack.pop();
-        if (!secp256k1.verify(msg, sig.signature, pubKey)) {
+        if (!secp256k1.verify(msg, sig, pubKey)) {
           return [false];
         } else {
           stack.push(true);
