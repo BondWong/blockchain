@@ -5,9 +5,14 @@ const utils = require('../src/utils/utils.js');
 
 describe('utils', function() {
   describe('#getPubKey', function() {
-    it('should return public key', function() {
-      var privateKey = '123456';
-      utils.getPubKey(privateKey);
+    it('should return private key and public key', function() {
+      utils.generateKeys();
+    })
+  });
+
+  describe('#generatePubKeyHash', function() {
+    it('should return a public key hash', function() {
+      var pubKeyHash = utils.generatePubKeyHash(utils.generateKeys()[1]);
     })
   });
 });

@@ -3,7 +3,7 @@
 const crypto = require('crypto');
 const sha256 = crypto.createHash('sha256');
 const ripemd160 = crypto.createHash('ripemd160');
-const verify_sha256 = crypto.createVerify('sha256');
+var secp256k1 = require('secp256k1');
 
 let OPTS = {
   OP_DUP: 'OP_DUP',
@@ -15,32 +15,41 @@ let OPTS = {
 function Script() {
   this.list = [];
 }
-
-Script.createLockingScript = function(pubKeyHash) {
-  this.list.push(OPTS.OP_DUP);
-  this.list.push(OPTS.OP_HASH160);
-  this.list.push(pubKeyHash);
-  this.list.push(OPTS.OP_EQUAL);
-  this.list.push(OPTS.OP_CHECKSIG);
+Script.prototype.getAll = function() {
+  return this.list;
+}
+Script.prototype.get = function(idx) {
+  return this.list[idx];
+}
+Script.prototype.setList = function(list) {
+  this.list = list;
+  this.length = list.length;
 }
 
-Script.createUnlockingScript = function(sig, pubKey) {
-  this.list.push(sig);
-  this.list.psuh(pubKey);
+function createLockingScript(pubKeyHash) {
+  var script = new Script();
+  script.setList([OPTS.OP_DUP, OPTS.OP_HASH160, pubKeyHash, OPTS.OP_EQUAL, OPTS.OP_CHECKSIG]);
+  return script;
 }
 
-Script.execute = function(unlockingScript, lockingScript) {
-  if (unlockingScript == null ||
-    lockingScript == null ||
-    unlockingScript.length != 2 ||
-    lockingScript.length != 5) {
-      return [false];
+function createUnlockingScript(sig, pubKey) {
+  var script = new Script();
+  script.setList([sig, pubKey]);
+  return script;
+}
+
+function execute(msg, unlockingScript, lockingScript) {
+  if (unlockingScript === null ||
+    lockingScript === null ||
+    unlockingScript.length !== 2 ||
+    lockingScript.length !== 5) {
+    return [false];
   }
 
   var stack = [];
-  stack.push(unlockingScript[0]);
-  stack.push(unlockingScript[1]);
-  lockingScript.forEach(function(ele) {
+  stack.push(unlockingScript.get(0));
+  stack.push(unlockingScript.get(1));
+  lockingScript.getAll().forEach(function(ele) {
     switch (ele) {
       case OPTS.OP_DUP:
         stack.push(stack[stack.length - 1]);
@@ -60,8 +69,7 @@ Script.execute = function(unlockingScript, lockingScript) {
       case OPTS.OP_CHECKSIG:
         var pubKey = stack.pop();
         var sig = stack.pop();
-        verify_sha256.update('test');
-        if (!verify_sha256.verify(pubKey, sig)) {
+        if (!secp256k1.verify(msg, sig.signature, pubKey)) {
           return [false];
         } else {
           stack.push(true);
@@ -72,7 +80,12 @@ Script.execute = function(unlockingScript, lockingScript) {
         break;
     }
   });
+
+  return stack;
 }
 
 var exports = module.exports = {};
 exports.Script = Script;
+exports.createLockingScript = createLockingScript;
+exports.createUnlockingScript = createUnlockingScript;
+exports.execute = execute;
