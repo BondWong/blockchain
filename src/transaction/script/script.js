@@ -87,7 +87,6 @@ function execute(msg, unlockingScript, lockingScript) {
 }
 
 var exports = module.exports = {};
-exports.Script = Script;
 exports.createLockingScript = createLockingScript;
 exports.createUnlockingScript = createUnlockingScript;
 exports.execute = execute;
