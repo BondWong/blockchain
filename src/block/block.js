@@ -38,11 +38,11 @@ Block.prototype.getSize = function() {
   return size;
 }
 Block.prototype.toBuffer = function() {
-  var buffer = this.header.toBuffer();
+  var buffer = [];
   this.transactions.forEach(function(tx) {
-    buffer.contact(tx.toBuffer());
+    buffer.push(tx.toBuffer());
   });
-  var buffer = Buffer.concat([this.blockSize, this.txCnt].contact(buffer), this.getSize());
+  var buffer = Buffer.concat([this.blockSize, this.header.toBuffer(), this.txCnt].concat(buffer), this.getSize());
   return buffer;
 }
 

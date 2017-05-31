@@ -20,7 +20,7 @@ describe('Block', function() {
       var txHash = crypto.randomBytes(32);
       var outputIdx = crypto.randomBytes(4);
       var output = tx.createOutput(2, pubKeyHash);
-      var input = tx.createInput(txHash, outputIdx, sig, pubKey);
+      var input = tx.createInput(txHash, outputIdx, sig.signature, pubKey);
       var transaction = tx.createTransaction([input], [output]);
 
       var header = new Header();
@@ -29,10 +29,13 @@ describe('Block', function() {
       header.setMerkleRoot(preBlockHash);
       header.setDiffTarget(preBlockHash);
       header.setNonce(preBlockHash);
-      console.log(header.getSize());
+      header.getSize();
+      header.toBuffer();
 
       var block = new Block(header);
       block.addTransaction(transaction);
+      block.getSize();
+      block.toBuffer();
     })
   });
 });

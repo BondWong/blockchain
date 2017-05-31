@@ -20,6 +20,8 @@ describe('Script', function() {
       var unlockingScript = script.createUnlockingScript(sig.signature, pubKey);
       var lockingScript = script.createLockingScript(pubKeyHash);
       assert.equal(script.execute(msg, unlockingScript, lockingScript)[0], true);
+      lockingScript.toBuffer();
+      unlockingScript.toBuffer();
     })
   });
 });

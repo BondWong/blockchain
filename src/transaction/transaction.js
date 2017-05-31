@@ -37,10 +37,10 @@ Transaction.prototype.toBuffer = function() {
   var inputBuffers = [];
   var outputBuffers = [];
   this.inputs.forEach(function(input) {
-    inputBuffers.add(input.toBuffer());
+    inputBuffers.push(input.toBuffer());
   });
   this.outputs.forEach(function(output) {
-    outputBuffers.add(output.toBuffer());
+    outputBuffers.push(output.toBuffer());
   });
   var buffer = Buffer.concat([this.version, this.inputCnt,
     this.outputCnt, this.locktime
@@ -60,9 +60,7 @@ Output.prototype.getSize = function() {
   return this.amount.length + this.lsrpSize.length + this.lsrp.length;
 }
 Output.prototype.toBuffer = function() {
-  var buffer = Buffer.concat([this.amount, this.lsrpSize,
-    this.lsrp.toBuffer()
-  ], this.getSize());
+  var buffer = Buffer.concat([this.amount, this.lsrpSize].concat(this.lsrp.toBuffer()), this.getSize());
   return buffer;
 }
 
