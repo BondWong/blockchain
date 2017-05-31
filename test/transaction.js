@@ -21,6 +21,9 @@ describe('Transaction', function() {
       var output = tx.createOutput(2, pubKeyHash);
       var input = tx.createInput(txHash, outputIdx, sig, pubKey);
       var transaction = tx.createTransaction([input], [output]);
+      console.log(output.getSize());
+      console.log(input.getSize());
+      console.log(transaction.getSize());
     })
   });
 });

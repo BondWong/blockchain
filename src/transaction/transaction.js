@@ -18,6 +18,16 @@ function Transaction(version, inputCnt, inputs, outputCnt, outputs, locktime) {
   this.locktime = locktime;
 }
 Transaction.prototype.constructor = Transaction;
+Transaction.prototype.getSize = function() {
+  var size = this.version.length + this.inputCnt.length + this.outputCnt.length + this.locktime.length;
+  this.inputs.forEach(function(input) {
+    size += input.getSize();
+  });
+  this.outputs.forEach(function(output) {
+    size += output.getSize();
+  });
+  return size;
+}
 
 function Output(amount, lsrpSize, lsrp) {
   this.amount = amount;
@@ -25,6 +35,9 @@ function Output(amount, lsrpSize, lsrp) {
   this.lsrp = lsrp;
 }
 Output.prototype.constructor = Output;
+Output.prototype.getSize = function() {
+  return this.amount.length + this.lsrpSize.length + this.lsrp.length;
+}
 
 function Input(txHash, opIdx, ulsrpSize, ulsrp, seqNum) {
   this.txHash = txHash;
@@ -34,6 +47,9 @@ function Input(txHash, opIdx, ulsrpSize, ulsrp, seqNum) {
   this.seqNum = seqNum;
 }
 Input.prototype.constructor = Input;
+Input.prototype.getSize = function() {
+  return this.txHash.length + this.opIdx.length + this.ulsrpSize.length + this.seqNum.length + this.ulsrp.length;
+}
 
 function createTransaction(inputs, outputs) {
   const inputCnt = Buffer.alloc(1);
