@@ -22,7 +22,7 @@ function generatePubKeyHash(pubKey) {
 }
 
 function getBlockHash(blockHeader) {
-  blockId = crypto.createHash('sha256').update(blockHeader).digest('hex');
+  var blockId = crypto.createHash('sha256').update(blockHeader).digest('hex');
   blockId = crypto.createHash('sha256').update(blockId).digest('hex');
   return Buffer.from(blockId);
 }
@@ -30,3 +30,4 @@ function getBlockHash(blockHeader) {
 var exports = module.exports = {};
 exports.generateKeys = generateKeys;
 exports.generatePubKeyHash = generatePubKeyHash;
+exports.getBlockHash = getBlockHash;

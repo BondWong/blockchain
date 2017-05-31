@@ -1,15 +1,5 @@
 'use script';
 
-Date.prototype.getUnixTime = function() {
-  return this.getTime() / 1000 | 0
-};
-if (!Date.now) Date.now = function() {
-  return new Date();
-}
-Date.time = function() {
-  return Date.now().getUnixTime();
-}
-
 const VERSION = Buffer.alloc(4);
 VERSION.writeUInt32BE(1, 0);
 
@@ -26,9 +16,9 @@ Block.prototype.addTransaction = function(transaction) {
   this.blockSize = Buffer.from(this.blockSize.length + transaction.getSize() + '');
 };
 
-function Header(version) {
-  this.version = version;
-  this.timestamp = Buffer.from(Date.time + '');
+function Header() {
+  this.version = VERSION;
+  this.timestamp = Buffer.from(new Date().getTime() + '');
 }
 Header.prototype.setPreBlockHash = function(preBlockHash) {
   this.preBlockHash = preBlockHash;
@@ -44,11 +34,15 @@ Header.prototype.setNonce = function(nonce) {
 }
 Header.prototype.getSize = function() {
   return this.version.length + this.preBlockHash.length + this.merkleRoot.length +
-    this.diffTarget.length + this.nonce.length + this.timestamp;
+    this.diffTarget.length + this.nonce.length + this.timestamp.length;
 }
 Header.prototype.toString = function(encoding) {
-  var buffer = Buffer.concat([this.version, this.timestamp,
-    this.preBlockHash, this.merkleRoot, this.timestamp, this.diffTarget, this.nonce
+  var buffer = Buffer.concat([this.version, this.preBlockHash,
+    this.merkleRoot, this.timestamp, this.diffTarget, this.nonce
   ], this.getSize());
   return buffer.toString('hex');
 }
+
+var exports = module.exports = {};
+exports.Header = Header;
+exports.Block = Block;

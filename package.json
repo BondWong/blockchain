@@ -27,6 +27,7 @@
   "homepage": "https://github.com/JunbangHuang/blockchain#readme",
   "dependencies": {
     "elliptic": "git+https://github.com/indutny/elliptic.git",
+    "merkle-lib": "^2.0.10",
     "secp256k1": "^3.2.5"
   },
   "devDependencies": {
