@@ -4,6 +4,9 @@ const crypto = require('crypto');
 const sha256 = crypto.createHash('sha256');
 const ripemd160 = crypto.createHash('ripemd160');
 var secp256k1 = require('secp256k1');
+const {
+  Bufferable
+} = require('../../bufferable.js');
 
 let OPTS = {
   OP_DUP: 'OP_DUP',
@@ -13,8 +16,11 @@ let OPTS = {
 };
 
 function Script() {
+  Bufferable.call(this);
   this.list = [];
 }
+Script.prototype = Object.call(Bufferable.prototype);
+Script.prototype.constructor = Script;
 Script.prototype.getAll = function() {
   return this.list;
 }
@@ -24,6 +30,14 @@ Script.prototype.get = function(idx) {
 Script.prototype.setList = function(list) {
   this.list = list;
   this.length = list.length;
+}
+Script.prototype.toBuffer = function() {
+  var size = 0;
+  this.list.forEach(function(ele) {
+    size += ele.length;
+  });
+  var buffer = Buffer.concat(this.list, size);
+  return buffer;
 }
 
 function createLockingScript(pubKeyHash) {

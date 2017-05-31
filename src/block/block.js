@@ -1,5 +1,9 @@
 'use script';
 
+const {
+  Bufferable
+} = require('../bufferable.js');
+
 const VERSION = Buffer.alloc(4);
 VERSION.writeUInt32BE(1, 0);
 
@@ -15,11 +19,17 @@ Block.prototype.addTransaction = function(transaction) {
   this.txCnt = Buffer.from(this.transactions.length + '');
   this.blockSize = Buffer.from(this.blockSize.length + transaction.getSize() + '');
 };
+Block.prototype.getPreBlockHash = function() {
+  return this.header.preBlockHash;
+}
 
 function Header() {
+  Bufferable.call(this);
   this.version = VERSION;
   this.timestamp = Buffer.from(new Date().getTime() + '');
 }
+Header.prototype = Object.call(Bufferable.prototype);
+Header.prototype.constructor = Header
 Header.prototype.setPreBlockHash = function(preBlockHash) {
   this.preBlockHash = preBlockHash;
 }
@@ -36,11 +46,11 @@ Header.prototype.getSize = function() {
   return this.version.length + this.preBlockHash.length + this.merkleRoot.length +
     this.diffTarget.length + this.nonce.length + this.timestamp.length;
 }
-Header.prototype.toString = function(encoding) {
+Header.prototype.toBuffer = function() {
   var buffer = Buffer.concat([this.version, this.preBlockHash,
     this.merkleRoot, this.timestamp, this.diffTarget, this.nonce
   ], this.getSize());
-  return buffer.toString('hex');
+  return buffer;
 }
 
 var exports = module.exports = {};
