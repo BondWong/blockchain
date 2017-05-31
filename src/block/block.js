@@ -8,6 +8,7 @@ const VERSION = Buffer.alloc(4);
 VERSION.writeUInt32BE(1, 0);
 
 function Block(header) {
+  Bufferable.call(this);
   this.header = header;
   this.transactions = [];
   this.txCnt = Buffer.alloc(1);
@@ -19,8 +20,30 @@ Block.prototype.addTransaction = function(transaction) {
   this.txCnt = Buffer.from(this.transactions.length + '');
   this.blockSize = Buffer.from(this.blockSize.length + transaction.getSize() + '');
 };
+Block.prototype.getTransactions = function() {
+  return this.transactions;
+};
 Block.prototype.getPreBlockHash = function() {
   return this.header.preBlockHash;
+}
+Block.prototype.getTxCnt = function() {
+  return this.transactions.length;
+}
+Block.prototype.getSize = function() {
+  var size = 0;
+  this.transactions.forEach(function(tx) {
+    size += tx.getSize();
+  });
+  size += this.blockSize.length + this.header.getSize() + this.txCnt.length;
+  return size;
+}
+Block.prototype.toBuffer = function() {
+  var buffer = this.header.toBuffer();
+  this.transactions.forEach(function(tx) {
+    buffer.contact(tx.toBuffer());
+  });
+  var buffer = Buffer.concat([this.blockSize, this.txCnt].contact(buffer), this.getSize());
+  return buffer;
 }
 
 function Header() {

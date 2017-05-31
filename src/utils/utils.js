@@ -27,7 +27,12 @@ function getBlockHash(blockHeader) {
   return Buffer.from(blockId);
 }
 
+function getTransactionHash(transaction) {
+  return crypto.createHash('sha256').update(transaction).digest('hex');
+}
+
 var exports = module.exports = {};
 exports.generateKeys = generateKeys;
 exports.generatePubKeyHash = generatePubKeyHash;
 exports.getBlockHash = getBlockHash;
+exports.getTransactionHash = getTransactionHash;
