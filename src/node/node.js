@@ -1,9 +1,13 @@
 'use strict';
 
+const crypto = require('crypto');
 var merkle = require('merkle-lib');
 var merkleProof = require('merkle-lib/proof');
+var bigInt = require('big-integer');
 
 const MAXIMUM = 3;
+const BLOCKTIME = 1; // 1 minute
+const HISTORICALTIMELENGTH = 100; // in reality, it is 2016
 
 function FullNode(ip, port) {
   this.ip = ip;
@@ -26,9 +30,43 @@ function Miner(ip, port) {
   this.block;
   this.transactionCache = {};
   this.stop = false;
+  this.isStop = false;
+  this.diff = 1;
+  this.times = [];
+  this.nonce = bigInt();
+  this.target = bigInt(2).pow(256 - this.diff);
 }
 Miner.prototype = Object.create(FullNode.prototype);
 Miner.prototype.constructor = Miner;
+Miner.prototype.addBlock = function(block) {
+  // assume all blocks are structurally validated
+  const preBlockHash = block.getPreBlockHash();
+  if (!this.blockchain.has(preBlockHash)) {
+    // verify solution
+    const hash = bigInt(crypto.createHash('sha256').update(block.header.nonce.toString('hex')).digest('hex'));
+    if (hash.leq(this.target)) {
+      this.blockchain[preBlockHash] = block;
+      // to-do: propagate block
+      // stop this round
+      this.stop = true;
+      // clean cache
+      block.getTransactions().forEach(function(tx) {
+        const txHash = utils.getTransactionHash(tx.toBuffer().toString('hex'));
+        if (this.transactionCache.has(txHash)) {
+          this.transactionCache.delete(txHash);
+        }
+      });
+      // start next round
+      while (this.isStop) {
+        // update difficulty
+        var real = this.times.reduce((acc, val) => acc + val, 0);
+        var ideal = this.times.length * BLOCKTIME;
+        this.diff = parseInt(this.diff * real / ideal);
+        this.mine();
+      }
+    }
+  }
+}
 Miner.prototype.addTransaction = function(transaction) {
   // assume all transactions are structurally validated
   const tx = transaction.toBuffer().toString('hex');
@@ -38,6 +76,10 @@ Miner.prototype.addTransaction = function(transaction) {
   }
 }
 Miner.prototype.mine = function() {
+  this.isStop = false;
+  this.stop = false;
+  this.block = null;
+  this.start = parseInt(this.date().getTime() / 1000 / 60);
   var merkleTree = null;
   while (!stop) {
     if (typeof this.block === 'undefined') {
@@ -50,13 +92,12 @@ Miner.prototype.mine = function() {
         var preBlockHash = utils.getBlockHash(preBlock);
         header.setPreBlockHash(preBlockHash);
       }
-      header.setDiffTarget(Buffer.from('1'));
-      header.setNonce(Buffer.from('1'));
       this.block = new Block(header);
     }
     if (this.block.getTxCnt() < MAXIMUM) {
       this.transactionCache.forEach(function(tx) {
         const txHash = utils.getTransactionHash(tx.toBuffer().toString('hex'));
+        // no transaction fee bias
         if (this.block.getTxCnt() < MAXIMUM) {
           if (merkleTree === null) {
             this.block.addTransaction(tx);
@@ -74,11 +115,23 @@ Miner.prototype.mine = function() {
       });
     }
     // calculate
+    var hash = bigInt(crypto.createHash('sha256').update(this.nonce.toString()).digest('hex'));
+    // found a solution
+    if (hash.leq(this.target)) {
+      const duration = parseInt(new Date().getTime() / 1000 / 60);
+      this.block.header.setNonce(Buffer.from(this.nonce.toString()));
+      this.blockHeader.setDiffTarget(Buffer.from(this.diff + ''));
+      if (this.times.length == HISTORICALTIMELENGTH) {
+        this.times.pop();
+      }
+      this.times.push(duration);
+      // propagate
+    } else {
+      this.nonce.add(1);
+    }
   }
-  // no transaction fee bias
-  if (this.block.getTxCnt() <= MAXIMUM) {
-    this.block.add(transaction);
-  }
+
+  this.isStop = true;
 }
 
 function Wallet(address) {
