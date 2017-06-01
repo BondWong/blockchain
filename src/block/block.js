@@ -50,6 +50,9 @@ function Header() {
   Bufferable.call(this);
   this.version = VERSION;
   this.timestamp = Buffer.from(new Date().getTime() + '');
+  this.merkleRoot = Buffer.alloc(32);
+  this.diffTarget = Buffer.alloc(4);
+  this.nonce = Buffer.alloc(4);
 }
 Header.prototype = Object.call(Bufferable.prototype);
 Header.prototype.constructor = Header

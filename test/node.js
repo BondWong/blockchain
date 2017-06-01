@@ -85,4 +85,13 @@ describe('Miner', function() {
       assert.equal(node.transactionCache.size, 1);
     })
   });
+
+  describe('#mine', function() {
+    it('should create a new block', function() {
+      var node = new Miner('191.168.2.2', '80');
+      assert.equal(node.block, null);
+      node.mine();
+      assert.notEqual(node.block, null);
+    })
+  });
 });

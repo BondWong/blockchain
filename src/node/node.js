@@ -6,10 +6,18 @@ var merkleProof = require('merkle-lib/proof');
 var bigInt = require('big-integer');
 
 const utils = require('../utils/utils.js');
+const {
+  Block,
+  Header
+} = require('../block/block.js');
 
 const MAXIMUM = 3;
 const BLOCKTIME = 1; // 1 minute
 const HISTORICALTIMELENGTH = 100; // in reality, it is 2016
+
+function sha256(data) {
+  return crypto.createHash('sha256').update(data).digest()
+}
 
 function FullNode(ip, port) {
   this.ip = ip;
@@ -37,6 +45,7 @@ function Miner(ip, port) {
   this.times = [];
   this.nonce = bigInt();
   this.target = bigInt(2).pow(256 - this.diff);
+  this.merkleTree = null;
 }
 Miner.prototype = Object.create(FullNode.prototype);
 Miner.prototype.constructor = Miner;
@@ -75,66 +84,76 @@ Miner.prototype.addTransaction = function(transaction) {
   const txHash = utils.getTransactionHash(tx).toString('hex');
   if (!this.transactionCache.has(txHash)) {
     this.transactionCache.set(txHash, transaction);
+    // create if not exist
+    this.createBlock();
+    // add if has space and not includes
+    this.addTransactionToBlock(transaction);
   }
 }
 Miner.prototype.mine = function() {
+  this.merkleTree = null;
   this.isStop = false;
   this.stop = false;
   this.block = null;
   this.start = parseInt(new Date().getTime() / 1000 / 60);
-  var merkleTree = null;
-  while (!this.stop) {
-    if (typeof this.block === 'undefined') {
-      var header = new Header();
-      if (typeof this.preBlock === 'undefined') {
-        var preBlockHash = utils.getBlockHash('Genesis Block');
-        header.setPreBlockHash(preBlockHash);
-      } else {
-        var preBlock = this.preBlock.toBuffer().toString('hex');
-        var preBlockHash = utils.getBlockHash(preBlock);
-        header.setPreBlockHash(preBlockHash);
-      }
-      this.block = new Block(header);
-    }
-    if (this.block.getTxCnt() < MAXIMUM) {
-      this.transactionCache.forEach(function(tx) {
-        const txHash = utils.getTransactionHash(tx.toBuffer().toString('hex'));
-        // no transaction fee bias
-        if (this.block.getTxCnt() < MAXIMUM) {
-          if (merkleTree === null) {
-            this.block.addTransaction(tx);
-            merkleTree = merkle(this.block.getTransactions(), sha256);
-            this.block.header.setMerkleRoot(Buffer.from(merkleTree[merkleTree.length - 1]));
-          } else {
-            const proof = merkleProof(merkleTree, txHash);
-            if (!merkleProof.verify(proof, sha256)) {
-              this.block.addTransaction(tx);
-              merkleTree = merkle(this.block.getTransactions(), sha256);
-              this.block.header.setMerkleRoot(Buffer.from(merkleTree[merkleTree.length - 1]));
-            }
-          }
-        }
-      });
-    }
-    calculate
-    var hash = bigInt(crypto.createHash('sha256').update(this.nonce.toString()).digest('hex'));
-    // found a solution
-    if (hash.leq(this.target)) {
-      const duration = parseInt(new Date().getTime() / 1000 / 60);
-      this.block.header.setNonce(Buffer.from(this.nonce.toString()));
-      this.blockHeader.setDiffTarget(Buffer.from(this.diff + ''));
-      if (this.times.length == HISTORICALTIMELENGTH) {
-        this.times.pop();
-      }
-      this.times.push(duration);
-      // propagate
-      break;
-    } else {
-      this.nonce.add(1);
-    }
-  }
+  // create if not exist
+  this.createBlock();
+  // add if has space and not includes
+  this.transactionCache.forEach(function(transaction) {
+    this.addTransactionToBlock(transaction);
+  });
+
+
+  // var hash = bigInt(crypto.createHash('sha256').update(this.nonce.toString()).digest('hex'));
+  // // found a solution
+  // if (hash.leq(this.target)) {
+  //   const duration = parseInt(new Date().getTime() / 1000 / 60);
+  //   this.block.header.setNonce(Buffer.from(this.nonce.toString()));
+  //   this.blockHeader.setDiffTarget(Buffer.from(this.diff + ''));
+  //   if (this.times.length == HISTORICALTIMELENGTH) {
+  //     this.times.pop();
+  //   }
+  //   this.times.push(duration);
+  //   // propagate
+  //   break;
+  // } else {
+  //   this.nonce.add(1);
+  // }
 
   this.isStop = true;
+}
+Miner.prototype.createBlock = function() {
+  if (typeof this.block === 'undefined' || this.block === null) {
+    var header = new Header();
+    if (typeof this.preBlock === 'undefined') {
+      var preBlockHash = utils.getBlockHash('Genesis Block');
+      header.setPreBlockHash(preBlockHash);
+    } else {
+      var preBlock = this.preBlock.toBuffer().toString('hex');
+      var preBlockHash = utils.getBlockHash(preBlock);
+      header.setPreBlockHash(preBlockHash);
+    }
+    this.block = new Block(header);
+  }
+}
+Miner.prototype.addTransactionToBlock = function(transaction) {
+  // no transaction fee bias
+  if (this.block.getTxCnt() < MAXIMUM) {
+    if (this.merkleTree === null) {
+      this.block.addTransaction(transaction);
+      const txHashes = this.block.getTransactions().map(x => utils.getTransactionHash(x.toBuffer.toString('hex')).toString('hex'));
+      this.merkleTree = merkle(txHashes, sha256);
+      this.block.header.setMerkleRoot(Buffer.from(this.merkleTree[this.merkleTree.length - 1]));
+    } else {
+      const proof = merkleProof(this.merkleTree, txHash);
+      if (!merkleProof.verify(proof, sha256)) {
+        this.block.addTransaction(transaction);
+        const txHashes = this.block.getTransactions().map(x => utils.getTransactionHash(x.toBuffer.toString('hex')).toString('hex'));
+        this.merkleTree = merkle(txHashes, sha256);
+        this.block.header.setMerkleRoot(Buffer.from(this.merkleTree[this.merkleTree.length - 1]));
+      }
+    }
+  }
 }
 
 function Wallet(address) {
