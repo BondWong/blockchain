@@ -48,12 +48,12 @@ function Miner(ip, port) {
 }
 Miner.prototype = Object.create(FullNode.prototype);
 Miner.prototype.constructor = Miner;
-Miner.prototype.addBlock = function(block) {
+Miner.prototype.addBlock = function(block, startNextRound = true) {
   // assume all blocks are structurally validated
   const blockHash = utils.getBlockHash(block.header.toBuffer().toString('hex')).toString('hex');
   if (!this.blockchain.has(blockHash)) {
     // verify solution
-    const hash = bigInt(crypto.createHash('sha256').update(block.header.nonce.toString('hex')).digest('hex'));
+    const hash = bigInt(block.header.hash.toString());
     if (hash.leq(this.target)) {
       this.blockchain.set(blockHash, block);
       // to-do: propagate block
@@ -62,16 +62,23 @@ Miner.prototype.addBlock = function(block) {
         this.request.abort();
       }
       // clean cache
+      var _this = this;
       block.getTransactions().forEach(function(tx) {
         const txHash = utils.getTransactionHash(tx.toBuffer().toString('hex'));
-        if (this.transactionCache.has(txHash)) {
-          this.transactionCache.delete(txHash);
+        if (_this.transactionCache.has(txHash)) {
+          _this.transactionCache.delete(txHash);
         }
       });
       // start next round
-      this.mine();
+      if (startNextRound) {
+        this.mine();
+      }
+
+      return true;
     }
   }
+
+  return false;
 }
 Miner.prototype.addTransaction = function(transaction) {
   // assume all transactions are structurally validated
@@ -148,6 +155,7 @@ Miner.prototype.mine = function(done) {
   });
 }
 Miner.prototype.foundSolution = function(solution) {
+  console.log(solution);
   this.block.header.setDiffTarget(Buffer.from(this.target.toString(16)));
   this.block.header.setNonce(Buffer.from(solution[0]));
   if (this.times.length == HISTORICALTIMELENGTH) {

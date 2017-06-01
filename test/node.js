@@ -3,6 +3,7 @@
 const crypto = require('crypto');
 var secp256k1 = require('secp256k1');
 var assert = require('assert');
+var bigInt = require('big-integer');
 
 const {
   FullNode,
@@ -127,33 +128,73 @@ describe('Miner', function() {
   });
 
   describe('#mine', function() {
-    it('should create a new block', function(done) {
+    // it('should create a new block', function(done) {
+    //   var node = new Miner('191.168.2.2', '80');
+    //   assert.equal(node.block, null);
+    //   node.mine(done);
+    //   assert.notEqual(node.block, null);
+    // }).timeout(1000 * 60);
+
+    // it('should create a new block and grab transactions', function(done) {
+    //   var node = new Miner('191.168.2.2', '80');
+    //   for (var i = 0; i < 10; i++) {
+    //     var keyPair = utils.generateKeys();
+    //     var pvtKey = keyPair[0];
+    //     var pubKey = keyPair[1];
+    //     var pubKeyHash = utils.generatePubKeyHash(pubKey);
+    //     const msg = crypto.randomBytes(32)
+    //     var sig = secp256k1.sign(msg, pvtKey);
+    //
+    //     var txHash = crypto.randomBytes(32);
+    //     var outputIdx = crypto.randomBytes(4);
+    //     var output = tx.createOutput(2, pubKeyHash);
+    //     var input = tx.createInput(txHash, outputIdx, sig.signature, pubKey);
+    //     var transaction = tx.createTransaction([input], [output]);
+    //     node.transactionCache.set(txHash, transaction);
+    //   }
+    //
+    //   node.mine(done);
+    //   assert.equal(node.block.transactions.length, 3);
+    // }).timeout(1000 * 60);
+  });
+
+  describe('#addBlock', function() {
+    it('should add a block if it is not contained', function() {
       var node = new Miner('191.168.2.2', '80');
-      assert.equal(node.block, null);
-      node.mine(done);
-      assert.notEqual(node.block, null);
-    }).timeout(1000 * 60);
 
-    it('should create a new block and grab transactions', function(done) {
-      var node = new Miner('191.168.2.2', '80');
-      for (var i = 0; i < 10; i++) {
-        var keyPair = utils.generateKeys();
-        var pvtKey = keyPair[0];
-        var pubKey = keyPair[1];
-        var pubKeyHash = utils.generatePubKeyHash(pubKey);
-        const msg = crypto.randomBytes(32)
-        var sig = secp256k1.sign(msg, pvtKey);
+      var keyPair = utils.generateKeys();
+      var pvtKey = keyPair[0];
+      var pubKey = keyPair[1];
+      var pubKeyHash = utils.generatePubKeyHash(pubKey);
+      const msg = crypto.randomBytes(32)
+      var sig = secp256k1.sign(msg, pvtKey);
 
-        var txHash = crypto.randomBytes(32);
-        var outputIdx = crypto.randomBytes(4);
-        var output = tx.createOutput(2, pubKeyHash);
-        var input = tx.createInput(txHash, outputIdx, sig.signature, pubKey);
-        var transaction = tx.createTransaction([input], [output]);
-        node.transactionCache.set(txHash, transaction);
-      }
+      var txHash = crypto.randomBytes(32);
+      var outputIdx = crypto.randomBytes(4);
+      var output = tx.createOutput(2, pubKeyHash);
+      var input = tx.createInput(txHash, outputIdx, sig.signature, pubKey);
+      var transaction = tx.createTransaction([input], [output]);
 
-      node.mine(done);
-      assert.equal(node.block.transactions.length, 3);
-    }).timeout(1000 * 60);
+      var header = new Header();
+      var preBlockHash = utils.getBlockHash('Genesis Block');
+      header.setPreBlockHash(preBlockHash);
+      header.setDiffTarget(Buffer.from(bigInt(2).pow(256 - 23).toString()));
+      header.setNonce(Buffer.from('15099857'));
+      header.hash = Buffer.from('9061185796136763734400281842985869907186066594885954112766764407286534');
+
+      var block = new Block(header);
+      block.addTransaction(transaction);
+
+      assert.equal(node.addBlock(block, false), true);
+      assert.equal(node.addBlock(block, false), false);
+      var preBlockHash = utils.getBlockHash('Genesis Block12');
+      header.setPreBlockHash(preBlockHash);
+      block.header.hash = Buffer.from('13803492693581127574869511724554050904902217944340773110325048447598594');
+      assert.equal(node.addBlock(block, false), false);
+      var preBlockHash = utils.getBlockHash('Genesis Block123');
+      header.setPreBlockHash(preBlockHash);
+      block.header.hash = Buffer.from('13803492693581127574869511724554050904902217944340773110325048447598591');
+      assert.equal(node.addBlock(block, false), true);
+    });
   });
 });
