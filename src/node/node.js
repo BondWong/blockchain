@@ -87,7 +87,7 @@ Miner.prototype.addTransaction = function(transaction) {
     // create if not exist
     this.createBlock();
     // add if has space and not includes
-    this.addTransactionToBlock(transaction);
+    this.addTransactionToBlock(transaction, txHash);
   }
 }
 Miner.prototype.mine = function() {
@@ -136,19 +136,29 @@ Miner.prototype.createBlock = function() {
     this.block = new Block(header);
   }
 }
-Miner.prototype.addTransactionToBlock = function(transaction) {
+Miner.prototype.addTransactionToBlock = function(transaction, txHash) {
   // no transaction fee bias
   if (this.block.getTxCnt() < MAXIMUM) {
     if (this.merkleTree === null) {
       this.block.addTransaction(transaction);
-      const txHashes = this.block.getTransactions().map(x => utils.getTransactionHash(x.toBuffer.toString('hex')).toString('hex'));
+      const txHashes = [];
+      this.block.getTransactions().forEach(function(ele) {
+        txHashes.push(Buffer.from(utils.getTransactionHash(ele.toBuffer().toString('hex'))));
+      });
       this.merkleTree = merkle(txHashes, sha256);
       this.block.header.setMerkleRoot(Buffer.from(this.merkleTree[this.merkleTree.length - 1]));
     } else {
+      if (typeof txHash === 'undefined' || txHash === null) {
+        const tx = transaction.toBuffer().toString('hex');
+        const txHash = utils.getTransactionHash(tx).toString('hex');
+      }
       const proof = merkleProof(this.merkleTree, txHash);
-      if (!merkleProof.verify(proof, sha256)) {
+      if (proof === null) {
         this.block.addTransaction(transaction);
-        const txHashes = this.block.getTransactions().map(x => utils.getTransactionHash(x.toBuffer.toString('hex')).toString('hex'));
+        const txHashes = [];
+        this.block.getTransactions().forEach(function(ele) {
+          txHashes.push(Buffer.from(utils.getTransactionHash(ele.toBuffer().toString('hex'))));
+        });
         this.merkleTree = merkle(txHashes, sha256);
         this.block.header.setMerkleRoot(Buffer.from(this.merkleTree[this.merkleTree.length - 1]));
       }
