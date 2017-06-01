@@ -51,6 +51,10 @@ describe('FullNode', function() {
   });
 });
 
+function done() {
+  // do nothing
+}
+
 describe('Miner', function() {
   describe('#addTransaction', function() {
     it('should add a transaction if not existed', function() {
@@ -123,11 +127,33 @@ describe('Miner', function() {
   });
 
   describe('#mine', function() {
-    it('should create a new block', function() {
+    it('should create a new block', function(done) {
       var node = new Miner('191.168.2.2', '80');
       assert.equal(node.block, null);
-      node.mine();
+      node.mine(done);
       assert.notEqual(node.block, null);
-    });
+    }).timeout(1000 * 60);
+
+    it('should create a new block and grab transactions', function(done) {
+      var node = new Miner('191.168.2.2', '80');
+      for (var i = 0; i < 10; i++) {
+        var keyPair = utils.generateKeys();
+        var pvtKey = keyPair[0];
+        var pubKey = keyPair[1];
+        var pubKeyHash = utils.generatePubKeyHash(pubKey);
+        const msg = crypto.randomBytes(32)
+        var sig = secp256k1.sign(msg, pvtKey);
+
+        var txHash = crypto.randomBytes(32);
+        var outputIdx = crypto.randomBytes(4);
+        var output = tx.createOutput(2, pubKeyHash);
+        var input = tx.createInput(txHash, outputIdx, sig.signature, pubKey);
+        var transaction = tx.createTransaction([input], [output]);
+        node.transactionCache.set(txHash, transaction);
+      }
+
+      node.mine(done);
+      assert.equal(node.block.transactions.length, 3);
+    }).timeout(1000 * 60);
   });
 });

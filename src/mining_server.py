@@ -24,10 +24,11 @@ class StateRequestHandler(BaseHTTPRequestHandler):
         # calculate
         nonce, duration = self.calculate(parameters['target'][0])
         result = json.dumps([nonce, duration])
+        print(result)
 
         # write response
-        self.send_header('content-type', 'application/json')
         self.send_response(200)
+        self.send_header('content-type', 'application/json')
         self.end_headers()
         self.wfile.write(bytes(result, 'utf-8'))
 

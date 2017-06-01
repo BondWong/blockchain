@@ -4,6 +4,7 @@ const crypto = require('crypto');
 var merkle = require('merkle-lib');
 var merkleProof = require('merkle-lib/proof');
 var bigInt = require('big-integer');
+var http = require('http');
 
 const utils = require('../utils/utils.js');
 const {
@@ -12,7 +13,7 @@ const {
 } = require('../block/block.js');
 
 const MAXIMUM = 3;
-const BLOCKTIME = 1; // 1 minute
+const BLOCKTIME = 10000; // 1 minute
 const HISTORICALTIMELENGTH = 100; // in reality, it is 2016
 
 function sha256(data) {
@@ -39,9 +40,7 @@ function Miner(ip, port) {
   this.preBlock;
   this.block;
   this.transactionCache = new Map();
-  this.stop = false;
-  this.isStop = false;
-  this.diff = 1;
+  this.diff = 23;
   this.times = [];
   this.nonce = bigInt();
   this.target = bigInt(2).pow(256 - this.diff);
@@ -59,7 +58,9 @@ Miner.prototype.addBlock = function(block) {
       this.blockchain.set(blockHash, block);
       // to-do: propagate block
       // stop this round
-      this.stop = true;
+      if (typeof this.request !== 'undefined' || this.request != null) {
+        this.request.abort();
+      }
       // clean cache
       block.getTransactions().forEach(function(tx) {
         const txHash = utils.getTransactionHash(tx.toBuffer().toString('hex'));
@@ -68,13 +69,7 @@ Miner.prototype.addBlock = function(block) {
         }
       });
       // start next round
-      while (this.isStop) {
-        // update difficulty
-        var real = this.times.reduce((acc, val) => acc + val, 0);
-        var ideal = this.times.length * BLOCKTIME;
-        this.diff = parseInt(this.diff * real / ideal);
-        this.mine();
-      }
+      this.mine();
     }
   }
 }
@@ -90,37 +85,76 @@ Miner.prototype.addTransaction = function(transaction) {
     this.addTransactionToBlock(transaction, txHash);
   }
 }
-Miner.prototype.mine = function() {
+Miner.prototype.mine = function(done) {
   this.merkleTree = null;
-  this.isStop = false;
-  this.stop = false;
   this.block = null;
-  this.start = parseInt(new Date().getTime() / 1000 / 60);
+  if (this.times.length !== 0) {
+    const real = this.times.reduce((acc, val) => {
+      return acc + val;
+    }, 0);
+    const ideal = this.times.length * 10000;
+    this.diff = parseInt(this.diff * real / ideal);
+  }
   // create if not exist
   this.createBlock();
   // add if has space and not includes
-  this.transactionCache.forEach(function(transaction) {
-    this.addTransactionToBlock(transaction);
+  const _this = this;
+  this.transactionCache.forEach(function(tx) {
+    _this.addTransactionToBlock(tx);
   });
 
+  // proof of work
+  const url = 'http://localhost:8080/POW?target=0x' + this.target.toString(16);
+  // console.log(this.target.toString(2));
+  this.request = http.get(url, (res) => {
+    const {
+      statusCode
+    } = res;
+    const contentType = res.headers['content-type'];
 
-  // var hash = bigInt(crypto.createHash('sha256').update(this.nonce.toString()).digest('hex'));
-  // // found a solution
-  // if (hash.leq(this.target)) {
-  //   const duration = parseInt(new Date().getTime() / 1000 / 60);
-  //   this.block.header.setNonce(Buffer.from(this.nonce.toString()));
-  //   this.blockHeader.setDiffTarget(Buffer.from(this.diff + ''));
-  //   if (this.times.length == HISTORICALTIMELENGTH) {
-  //     this.times.pop();
-  //   }
-  //   this.times.push(duration);
-  //   // propagate
-  //   break;
-  // } else {
-  //   this.nonce.add(1);
-  // }
+    let error;
+    if (statusCode !== 200) {
+      error = new Error('Request Failed.\n' +
+        `Status Code: ${statusCode}`);
+    } else if (!/^application\/json/.test(contentType)) {
+      error = new Error('Invalid content-type.\n' +
+        `Expected application/json but received ${contentType}`);
+    }
+    if (error) {
+      console.error(error.message);
+      // consume response data to free up memory
+      res.resume();
+      return;
+    }
 
-  this.isStop = true;
+    res.setEncoding('utf8');
+    let rawData = '';
+    res.on('data', (chunk) => {
+      rawData += chunk;
+    });
+    res.on('end', () => {
+      try {
+        const parsedData = JSON.parse(rawData);
+        _this.foundSolution(parsedData);
+        if (done) {
+          done();
+        }
+      } catch (e) {
+        console.error(e.message);
+      }
+    });
+  }).on('error', (e) => {
+    console.error(`Got error: ${e.message}`);
+  });
+}
+Miner.prototype.foundSolution = function(solution) {
+  this.block.header.setDiffTarget(Buffer.from(this.target.toString(16)));
+  this.block.header.setNonce(Buffer.from(solution[0]));
+  if (this.times.length == HISTORICALTIMELENGTH) {
+    this.times.pop();
+  }
+  this.times.push(parseInt(solution[1]));
+  // propagate
 }
 Miner.prototype.createBlock = function() {
   if (typeof this.block === 'undefined' || this.block === null) {
