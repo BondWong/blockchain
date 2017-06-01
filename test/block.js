@@ -3,7 +3,10 @@
 const crypto = require('crypto');
 var secp256k1 = require('secp256k1');
 
-const {Header, Block} = require('../src/block/block.js');
+const {
+  Header,
+  Block
+} = require('../src/block/block.js');
 const tx = require('../src/transaction/transaction.js');
 const utils = require('../src/utils/utils.js');
 
