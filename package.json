@@ -27,6 +27,7 @@
   "homepage": "https://github.com/JunbangHuang/blockchain#readme",
   "dependencies": {
     "big-integer": "^1.6.22",
+    "body-parser": "^1.17.2",
     "elliptic": "git+https://github.com/indutny/elliptic.git",
     "express": "^4.15.3",
     "merkle-lib": "^2.0.10",

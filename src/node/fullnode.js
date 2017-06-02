@@ -2,21 +2,30 @@
 
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 const crypto = require('crypto');
 
 const utils = require('../utils/utils.js');
 
-const port = 3000
+const port = process.env.PORT || 3000;
 var blockchain = new Map();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 // add block
 app.post('/block', function(req, res) {
+  const block = req.body;
   // assume all blocks are structurally validated
-
   const blockHash = utils.getBlockHash(JSON.stringify(block.header)).toString('hex');
-  if (!this.blockchain.has(blockHash)) {
-    this.blockchain.set(blockHash, block);
+  if (!blockchain.has(blockHash)) {
+    blockchain.set(blockHash, block);
     // to-do: propagate block
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(304);
   }
 });
 
