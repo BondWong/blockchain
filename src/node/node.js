@@ -20,22 +20,7 @@ function sha256(data) {
   return crypto.createHash('sha256').update(data).digest()
 }
 
-function FullNode(ip, port) {
-  this.ip = ip;
-  this.port = port;
-  this.blockchain = new Map();
-}
-FullNode.prototype.addBlock = function(block) {
-  // assume all blocks are structurally validated
-  const blockHash = utils.getBlockHash(block.header.toBuffer().toString('hex')).toString('hex');
-  if (!this.blockchain.has(blockHash)) {
-    this.blockchain.set(blockHash, block);
-    // to-do: propagate block
-  }
-}
-
 function Miner(ip, port) {
-  FullNode.call(this, ip, port);
   this.blockchain = new Map();
   this.preBlock;
   this.block;
@@ -46,8 +31,6 @@ function Miner(ip, port) {
   this.target = bigInt(2).pow(256 - this.diff);
   this.merkleTree = null;
 }
-Miner.prototype = Object.create(FullNode.prototype);
-Miner.prototype.constructor = Miner;
 Miner.prototype.addBlock = function(block, startNextRound = true) {
   // assume all blocks are structurally validated
   const blockHash = utils.getBlockHash(block.header.toBuffer().toString('hex')).toString('hex');
