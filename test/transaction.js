@@ -5,6 +5,7 @@ const crypto = require('crypto');
 var secp256k1 = require('secp256k1');
 
 const tx = require('../src/transaction/transaction.js');
+const script = require('../src/transaction/script/script.js');
 const utils = require('../src/utils/utils.js');
 
 describe('Transaction', function() {
@@ -22,9 +23,7 @@ describe('Transaction', function() {
       var output = tx.createOutput(2, pubKeyHash);
       var input = tx.createInput(txHash, outputIdx, sig.signature, pubKey);
       var transaction = tx.createTransaction([input], [output]);
-      output.toBuffer();
-      input.toBuffer();
-      transaction.toBuffer();
+      assert.equal(script.execute(msg, transaction.inputs[0].script, transaction.outputs[0].script)[0], true);
     })
   });
 });

@@ -16,15 +16,12 @@ function generateKeys() {
 function generatePubKeyHash(pubKey) {
   var pubKeyHash = crypto.createHash('sha256').update(pubKey.toString('hex')).digest('hex');
   pubKeyHash = crypto.createHash('ripemd160').update(pubKeyHash).digest('hex');
-  var buffer = Buffer.alloc(pubKeyHash.length, pubKeyHash);
-
-  return buffer;
+  return pubKeyHash;
 }
 
 function getBlockHash(blockHeader) {
   var blockId = crypto.createHash('sha256').update(blockHeader).digest('hex');
-  blockId = crypto.createHash('sha256').update(blockId).digest('hex');
-  return Buffer.from(blockId);
+  return crypto.createHash('sha256').update(blockId).digest('hex');
 }
 
 function getTransactionHash(transaction) {

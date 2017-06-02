@@ -4,9 +4,6 @@ const crypto = require('crypto');
 const sha256 = crypto.createHash('sha256');
 const ripemd160 = crypto.createHash('ripemd160');
 var secp256k1 = require('secp256k1');
-const {
-  Bufferable
-} = require('../../bufferable.js');
 
 let OPTS = {
   OP_DUP: 'OP_DUP',
@@ -16,10 +13,8 @@ let OPTS = {
 };
 
 function Script() {
-  Bufferable.call(this);
   this.list = [];
 }
-Script.prototype = Object.call(Bufferable.prototype);
 Script.prototype.constructor = Script;
 Script.prototype.getAll = function() {
   return this.list;
@@ -31,19 +26,16 @@ Script.prototype.setList = function(list) {
   this.list = list;
   this.length = list.length;
 }
-Script.prototype.toBuffer = function() {
-  var size = 0;
-  this.list.forEach(function(ele) {
-    size += ele.length;
-  });
-  var buffer = Buffer.concat(this.list, size);
-  return buffer;
+Script.prototype.getSize = function() {
+  const size = this.list.reduce((acc, ele) => {
+    return acc + ele.length
+  }, 0);
 }
 
 function createLockingScript(pubKeyHash) {
   var script = new Script();
-  script.setList([Buffer.from(OPTS.OP_DUP), Buffer.from(OPTS.OP_HASH160),
-    pubKeyHash, Buffer.from(OPTS.OP_EQUAL), Buffer.from(OPTS.OP_CHECKSIG)
+  script.setList([OPTS.OP_DUP, OPTS.OP_HASH160,
+    pubKeyHash, OPTS.OP_EQUAL, OPTS.OP_CHECKSIG
   ]);
   return script;
 }
@@ -83,8 +75,8 @@ function execute(msg, unlockingScript, lockingScript) {
         }
         break;
       case OPTS.OP_CHECKSIG:
-        var pubKey = stack.pop();
-        var sig = stack.pop();
+        var pubKey = Buffer.from(stack.pop(), 'hex');
+        var sig = Buffer.from(stack.pop(), 'hex');
         if (!secp256k1.verify(msg, sig, pubKey)) {
           return [false];
         } else {

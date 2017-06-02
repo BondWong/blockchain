@@ -28,6 +28,7 @@
   "dependencies": {
     "big-integer": "^1.6.22",
     "elliptic": "git+https://github.com/indutny/elliptic.git",
+    "express": "^4.15.3",
     "merkle-lib": "^2.0.10",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",

@@ -33,12 +33,10 @@ describe('Block', function() {
       header.setDiffTarget(preBlockHash);
       header.setNonce(preBlockHash);
       header.getSize();
-      header.toBuffer();
 
       var block = new Block(header);
       block.addTransaction(transaction);
       block.getSize();
-      block.toBuffer();
     })
   });
 });
