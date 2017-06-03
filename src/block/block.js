@@ -1,18 +1,42 @@
 'use script';
 
+var merkle = require('merkle-lib');
+var merkleProof = require('merkle-lib/proof');
+
 const VERSION = '1';
 
 function Block(header) {
+  this.merkleTree = null;
   this.header = header;
   this.transactions = [];
+  this.transactionsBuffer = [];
   this.txCnt = null;
   this.blockSize = null;
+}
+Block.prototype.contains = function(tx) {
+  // not contains
+  if (typeof this.merkleTree === 'undefined' || this.merkleTree === null) {
+    return false;
+  }
+  const txHash = utils.getTransactionHash(tx);
+  const proof = merkleProof(this.merkleTree, txHash);
+  // not contains
+  if (proof === null) {
+    return false;
+  }
+  return true;
 }
 Block.prototype.setBlockSize = function() {
   this.blockSize = this.getSize();
 }
 Block.prototype.addTransaction = function(transaction) {
+  // push into block
   this.transactions.push(transaction);
+  this.transactionsBuffer.push(Buffer.from(utils.getTransactionHash(JSON.stringify(transaction))));
+  // update merkle tree
+  this.merkleTree = merkle(txHashes, sha256);
+  // update merkle root
+  this.header.setMerkleRoot(this.merkleTree[this.merkleTree.length - 1])
 };
 Block.prototype.getTransactions = function() {
   return this.transactions;
@@ -29,6 +53,14 @@ Block.prototype.getSize = function() {
     size += tx.getSize();
   });
   return size;
+}
+Block.prototype.toBlock = function() {
+  return {
+    header: this.header,
+    transactions: this.transactions,
+    txCnt: this.txCnt,
+    blockSize: this.blockSize
+  };
 }
 
 function Header() {

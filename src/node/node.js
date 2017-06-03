@@ -95,7 +95,6 @@ Miner.prototype.mine = function(done) {
 
   // proof of work
   const url = 'http://localhost:8080/POW?target=0x' + this.target.toString(16);
-  // console.log(this.target.toString(2));
   this.request = http.get(url, (res) => {
     const {
       statusCode
@@ -198,4 +197,3 @@ function Wallet(address) {
 
 
 var exports = module.exports = {};
-exports.Miner = Miner;
