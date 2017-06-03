@@ -1,8 +1,6 @@
 'use script';
 
 const crypto = require('crypto');
-const sha256 = crypto.createHash('sha256');
-const ripemd160 = crypto.createHash('ripemd160');
 var secp256k1 = require('secp256k1');
 
 let OPTS = {
@@ -63,8 +61,8 @@ function execute(msg, unlockingScript, lockingScript) {
         stack.push(stack[stack.length - 1]);
         break;
       case OPTS.OP_HASH160:
-        var digest = sha256.update(stack.pop()).digest('hex');
-        digest = ripemd160.update(digest).digest('hex')
+        var digest = crypto.createHash('sha256').update(stack.pop()).digest('hex');
+        digest = crypto.createHash('ripemd160').update(digest).digest('hex')
         stack.push(digest);
         break;
       case OPTS.OP_EQUAL:

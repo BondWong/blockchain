@@ -3,6 +3,8 @@
 var merkle = require('merkle-lib');
 var merkleProof = require('merkle-lib/proof');
 
+const utils = require('../utils/utils.js');
+
 const VERSION = '1';
 
 function Block(header) {
@@ -10,6 +12,9 @@ function Block(header) {
   this.header = header;
   this.transactions = [];
   this.transactionsBuffer = [];
+  // the merkle tree use Buffer object, which is immutable,
+  // even with the same value, the object is not the same, therefore, use set here
+  this.transactionsIds = new Set();
   this.txCnt = null;
   this.blockSize = null;
 }
@@ -18,25 +23,22 @@ Block.prototype.contains = function(tx) {
   if (typeof this.merkleTree === 'undefined' || this.merkleTree === null) {
     return false;
   }
-  const txHash = utils.getTransactionHash(tx);
-  const proof = merkleProof(this.merkleTree, txHash);
-  // not contains
-  if (proof === null) {
-    return false;
-  }
-  return true;
+  const txHash = utils.getTransactionHash(JSON.stringify(tx));
+  return this.transactionsIds.has(txHash);
 }
 Block.prototype.setBlockSize = function() {
   this.blockSize = this.getSize();
 }
 Block.prototype.addTransaction = function(transaction) {
   // push into block
+  const txHash = utils.getTransactionHash(JSON.stringify(transaction));
   this.transactions.push(transaction);
-  this.transactionsBuffer.push(Buffer.from(utils.getTransactionHash(JSON.stringify(transaction))));
+  this.transactionsBuffer.push(new Buffer(txHash, 'hex'));
+  this.transactionsIds.add(txHash);
   // update merkle tree
-  this.merkleTree = merkle(txHashes, sha256);
+  this.merkleTree = merkle(this.transactionsBuffer, utils.sha256);
   // update merkle root
-  this.header.setMerkleRoot(this.merkleTree[this.merkleTree.length - 1])
+  this.header.setMerkleRoot(this.merkleTree[this.merkleTree.length - 1].toString('hex'));
 };
 Block.prototype.getTransactions = function() {
   return this.transactions;
@@ -55,6 +57,8 @@ Block.prototype.getSize = function() {
   return size;
 }
 Block.prototype.toBlock = function() {
+  this.setBlockSize();
+  this.txCnt = this.transactions.length;
   return {
     header: this.header,
     transactions: this.transactions,

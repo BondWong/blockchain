@@ -16,10 +16,6 @@ const MAXIMUM = 3;
 const BLOCKTIME = 10000; // 1 minute
 const HISTORICALTIMELENGTH = 100; // in reality, it is 2016
 
-function sha256(data) {
-  return crypto.createHash('sha256').update(data).digest()
-}
-
 function Miner(ip, port) {
   this.blockchain = new Map();
   this.preBlock;

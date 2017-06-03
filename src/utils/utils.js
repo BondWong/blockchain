@@ -28,8 +28,13 @@ function getTransactionHash(transaction) {
   return crypto.createHash('sha256').update(transaction).digest('hex');
 }
 
+function sha256(data) {
+  return crypto.createHash('sha256').update(data).digest()
+}
+
 var exports = module.exports = {};
 exports.generateKeys = generateKeys;
 exports.generatePubKeyHash = generatePubKeyHash;
 exports.getBlockHash = getBlockHash;
 exports.getTransactionHash = getTransactionHash;
+exports.sha256 = sha256;
