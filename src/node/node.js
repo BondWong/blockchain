@@ -198,5 +198,4 @@ function Wallet(address) {
 
 
 var exports = module.exports = {};
-exports.FullNode = FullNode;
 exports.Miner = Miner;

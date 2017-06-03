@@ -16,42 +16,6 @@ const {
 const tx = require('../src/transaction/transaction.js');
 const utils = require('../src/utils/utils.js');
 
-describe('FullNode', function() {
-  describe('#addBlock', function() {
-    it('should add a block if not existed', function() {
-      var keyPair = utils.generateKeys();
-      var pvtKey = keyPair[0];
-      var pubKey = keyPair[1];
-      var pubKeyHash = utils.generatePubKeyHash(pubKey);
-      const msg = crypto.randomBytes(32)
-      var sig = secp256k1.sign(msg, pvtKey);
-
-      var txHash = crypto.randomBytes(32);
-      var outputIdx = crypto.randomBytes(4);
-      var output = tx.createOutput(2, pubKeyHash);
-      var input = tx.createInput(txHash, outputIdx, sig.signature, pubKey);
-      var transaction = tx.createTransaction([input], [output]);
-
-      var header = new Header();
-      var preBlockHash = utils.getBlockHash('1');
-      header.setPreBlockHash(preBlockHash);
-      header.setMerkleRoot(preBlockHash);
-      header.setDiffTarget(preBlockHash);
-      header.setNonce(preBlockHash);
-
-      var block = new Block(header);
-      block.addTransaction(transaction);
-
-      var node = new FullNode('191.168.2.1', '80');
-      assert.equal(node.blockchain.size, 0);
-      node.addBlock(block);
-      assert.equal(node.blockchain.size, 1);
-      node.addBlock(block);
-      assert.equal(node.blockchain.size, 1);
-    });
-  });
-});
-
 function done() {
   // do nothing
 }
@@ -169,21 +133,23 @@ describe('Miner', function() {
       const msg = crypto.randomBytes(32)
       var sig = secp256k1.sign(msg, pvtKey);
 
-      var txHash = crypto.randomBytes(32);
-      var outputIdx = crypto.randomBytes(4);
+      var txHash = crypto.randomBytes(32).toString('hex');
+      var outputIdx = crypto.randomBytes(4).toString('hex');
       var output = tx.createOutput(2, pubKeyHash);
-      var input = tx.createInput(txHash, outputIdx, sig.signature, pubKey);
+      var input = tx.createInput(txHash, outputIdx, sig.signature.toString('hex'), pubKey.toString('hex'));
       var transaction = tx.createTransaction([input], [output]);
 
       var header = new Header();
       var preBlockHash = utils.getBlockHash('Genesis Block');
       header.setPreBlockHash(preBlockHash);
-      header.setDiffTarget(Buffer.from(bigInt(2).pow(256 - 23).toString()));
-      header.setNonce(Buffer.from('15099857'));
-      header.hash = Buffer.from('9061185796136763734400281842985869907186066594885954112766764407286534');
+      header.setDiffTarget(bigInt(2).pow(256 - 23).toString());
+      header.setNonce('15099857');
+      header.hash = '9061185796136763734400281842985869907186066594885954112766764407286534';
 
       var block = new Block(header);
       block.addTransaction(transaction);
+
+      console.log(JSON.stringify(block));
 
       assert.equal(node.addBlock(block, false), true);
       assert.equal(node.addBlock(block, false), false);
