@@ -1,0 +1,35 @@
+{
+   "version":"1",
+   "inputCnt":1,
+   "inputs":[
+      {
+         "txHash":"3b89240267acdcc3aa8319c88a433794c6c8cd0deb7007c374d0468d04c5cf90",
+         "opIdx":"de562eca",
+         "script":{
+            "list":[
+               "3463958d7fa360d3f37b9a77789125cb89cb870c254026b3cc8994bc0821512a04937bbf8a035085d066ba1f5c77b3092587c9bbfc141ee20dbf14425aa57578",
+               "039f226ae991b26fc80bd2b35c100e3cfa2eeb5373fb7a1edb07b25641aeedfc80"
+            ],
+            "length":2
+         },
+         "seqNum":"1"
+      }
+   ],
+   "outputCnt":1,
+   "outputs":[
+      {
+         "amount":2,
+         "script":{
+            "list":[
+               "OP_DUP",
+               "OP_HASH160",
+               "361c06d6a237bdd95a5c88243871952340223a79",
+               "OP_EQUAL",
+               "OP_CHECKSIG"
+            ],
+            "length":5
+         }
+      }
+   ],
+   "locktime":"1"
+}

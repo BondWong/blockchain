@@ -18,10 +18,10 @@ describe('Transaction', function() {
       const msg = crypto.randomBytes(32)
       var sig = secp256k1.sign(msg, pvtKey);
 
-      var txHash = crypto.randomBytes(32);
-      var outputIdx = crypto.randomBytes(4);
+      var txHash = crypto.randomBytes(32).toString('hex');
+      var outputIdx = crypto.randomBytes(4).toString('hex');
       var output = tx.createOutput(2, pubKeyHash);
-      var input = tx.createInput(txHash, outputIdx, sig.signature, pubKey);
+      var input = tx.createInput(txHash, outputIdx, sig.signature.toString('hex'), pubKey.toString('hex'));
       var transaction = tx.createTransaction([input], [output]);
       assert.equal(script.execute(msg, transaction.inputs[0].script, transaction.outputs[0].script)[0], true);
     })
