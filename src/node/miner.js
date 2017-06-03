@@ -167,6 +167,7 @@ app.post('/transaction', function(req, res) {
   const transaction = req.body;
   const txHash = utils.getTransactionHash(JSON.stringify(transaction)).toString('hex');
   // assume all transactions are new
+  // to-do: transaction script validation
   // add to cache
   if (transactionCache.has(txHash)) {
     res.sendStatus(304);
