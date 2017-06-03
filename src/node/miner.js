@@ -90,6 +90,8 @@ var mining = {
     // append to blockchain
     const blockHash = utils.getBlockHash(JSON.stringify(block.header)).toString('hex');
     blockchain.set(blockHash, block);
+    // update preBlock
+    preBlock = block;
     // propagate
 
     // update time window
@@ -128,6 +130,19 @@ app.use(bodyParser.urlencoded({
 
 // add transaction
 app.post('/transaction', function(req, res) {
+  // assume all transactions are structurally validated
+  const transaction = req.body;
+  const txHash = utils.getTransactionHash(JSON.stringify(transaction)).toString('hex');
+  // add to cache
+  if (transactionCache.has(txHash)) {
+    res.sendStatus(304);
+    return;
+  }
+  transactionCache.set(txHash, transaction);
+  // add to block
+  if (!block.transactions.length < MAXIMUM) {
+    block.addTransaction();
+  }
   res.sendStatus(200);
 });
 // add block
@@ -147,6 +162,8 @@ app.post('/block', function(req, res) {
   }
   // append to blockchain
   blockchain.set(blockHash, block);
+  // update pre block
+  preBlock = block;
   // propagate
   // clean cache
   block.transactions.forEach(function(tx) {
