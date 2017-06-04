@@ -42,3 +42,4 @@ exports.generatePubKeyHash = generatePubKeyHash;
 exports.getBlockHash = getBlockHash;
 exports.getTransactionHash = getTransactionHash;
 exports.sha256 = sha256;
+exports.getHash = getHash;

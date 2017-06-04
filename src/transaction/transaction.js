@@ -1,6 +1,7 @@
 'use strict';
 
 const script = require('./script/script.js');
+const utils = require('../utils/utils.js');
 
 const VERSION = '1';
 const LOCKTIME = '1';
@@ -49,9 +50,9 @@ function createOutput(amt, pubKeyHash) {
 
 function createInput(txHash, outputIndex, pvtKey, pubKey) {
   const input = new Input(txHash, outputIndex, 0, null, SEQNUM);
-  const inputHash = Buffer.from(utils.getHash(JSON.stringify(input)));
+  const inputHash = Buffer.alloc(32, utils.getHash(JSON.stringify(input)), 'hex');
   const unlockingScript = script.createUnlockingScript(inputHash, pvtKey, pubKey);
-  return new Input(txHash, outputIndex, unlockingScript.getSize(), unlockingScript, SEQNUM);
+  return [new Input(txHash, outputIndex, unlockingScript.getSize(), unlockingScript, SEQNUM), inputHash];
 }
 
 var exports = module.exports = {};

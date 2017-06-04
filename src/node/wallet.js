@@ -31,9 +31,11 @@ function createInputs(amount) {
       // sign
       const txHash = utils.getTransactionHash(JSON.stringify(utxo.transaction));
       const opIdx = utxo.opIndex;
-      const input = tx.createInput(txHash, opIdx, pvtKey, pubKey.toString('hex'));
+      const tuple = tx.createInput(txHash, opIdx, pvtKey, pubKey.toString('hex'));
+      const input = tuple[0];
+      const inputHash = tuple[1];
       // unlock
-      if (script.execute(input.script, utxo.script)[0]) {
+      if (script.execute(inputHash, input.script, utxo.script)[0]) {
         inputs.push(input);
         amount = amount < utxo.amount ? 0 : amount - utxo.amount;
         total += utxo.amount;
@@ -68,7 +70,7 @@ app.post('/send/:amount/:recPubKeyHash', function(req, res) {
   const inputs = result[0];
   const totalAmount = result[1];
 
-  // create output
+  // create outputs
   const outputs = createOutputs(totalAmount, amount, recPubKeyHash, pubKeyHash);
 
   // create transaction

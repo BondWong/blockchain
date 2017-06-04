@@ -1,7 +1,6 @@
 'use strict';
 
 const crypto = require('crypto');
-var secp256k1 = require('secp256k1');
 var assert = require('assert');
 
 var script = require('../src/transaction/script/script.js');
@@ -15,9 +14,8 @@ describe('Script', function() {
       var pubKey = keyPair[1];
       var pubKeyHash = utils.generatePubKeyHash(pubKey);
       const msg = crypto.randomBytes(32)
-      var sig = secp256k1.sign(msg, pvtKey);
 
-      var unlockingScript = script.createUnlockingScript(sig.signature.toString('hex'), pubKey.toString('hex'));
+      var unlockingScript = script.createUnlockingScript(msg, pvtKey, pubKey.toString('hex'));
       var lockingScript = script.createLockingScript(pubKeyHash);
       assert.equal(script.execute(msg, unlockingScript, lockingScript)[0], true);
     })
