@@ -30,7 +30,7 @@ Output.prototype.getSize = function() {
 function Input(txHash, opIdx, size, script, seqNum) {
   this.txHash = txHash;
   this.opIdx = opIdx;
-  this.size = size;
+  this.scriptSize = size;
   this.script = script;
   this.seqNum = seqNum;
 }
@@ -47,8 +47,10 @@ function createOutput(amt, pubKeyHash) {
   return new Output(amt, lockingScript.getSize(), lockingScript);
 }
 
-function createInput(txHash, outputIndex, sig, pubKey) {
-  const unlockingScript = script.createUnlockingScript(sig, pubKey);
+function createInput(txHash, outputIndex, pvtKey, pubKey) {
+  const input = new Input(txHash, outputIndex, 0, null, SEQNUM);
+  const inputHash = Buffer.from(utils.getHash(JSON.stringify(input)));
+  const unlockingScript = script.createUnlockingScript(inputHash, pvtKey, pubKey);
   return new Input(txHash, outputIndex, unlockingScript.getSize(), unlockingScript, SEQNUM);
 }
 

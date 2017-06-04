@@ -24,6 +24,6 @@ describe('Transaction', function() {
       var input = tx.createInput(txHash, outputIdx, sig.signature.toString('hex'), pubKey.toString('hex'));
       var transaction = tx.createTransaction([input], [output]);
       assert.equal(script.execute(msg, transaction.inputs[0].script, transaction.outputs[0].script)[0], true);
-    })
+    });
   });
 });

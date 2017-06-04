@@ -38,9 +38,10 @@ function createLockingScript(pubKeyHash) {
   return script;
 }
 
-function createUnlockingScript(sig, pubKey) {
+function createUnlockingScript(inputHash, pvtKey, pubKey) {
   var script = new Script();
-  script.setList([sig, pubKey]);
+  var sig = secp256k1.sign(inputHash, pvtKey);
+  script.setList([sig.signature.toString('hex'), pubKey]);
   return script;
 }
 

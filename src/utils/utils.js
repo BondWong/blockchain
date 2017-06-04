@@ -28,6 +28,10 @@ function getTransactionHash(transaction) {
   return crypto.createHash('sha256').update(transaction).digest('hex');
 }
 
+function getHash(str) {
+  return crypto.createHash('sha256').update(str).digest('hex');
+}
+
 function sha256(data) {
   return crypto.createHash('sha256').update(data).digest()
 }
