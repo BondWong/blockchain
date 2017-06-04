@@ -13,12 +13,17 @@ const {
   Header
 } = require('../block/block.js');
 
+const port = process.env.MINER_PORT || 3001;
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
 const MAXIMUM = 3;
 const BLOCKTIME = 10000; // 10 seconds
 const HISTORICALTIMELENGTH = 50; // in reality, it is 2016
 const DIFF = 23;
 
-const port = process.env.MINER_PORT || 3001;
 var blockchain = new Map();
 var transactionCache = new Map();
 var preBlock = null;
@@ -133,11 +138,6 @@ function createBlock() {
   header.setPreBlockHash(preBlockHash);
   return new Block(header);
 }
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
 
 function receiveBlock(blockHash, block) {
   blockchain.set(blockHash, block);

@@ -2,14 +2,20 @@
 
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 const http = require('http');
 const crypto = require('crypto');
 
 const utils = require('../utils/utils.js');
-const tx = require('../src/transaction/transaction.js');
-const script = require('../src/transaction/script/script.js');
+const tx = require('../transaction/transaction.js');
+const script = require('../transaction/script/script.js');
 
 const port = process.env.WALLET_PORT || 3002;
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
 var utxos = []; // outputs with reference to the transaction and its index in the transaction
 var keyPair = utils.generateKeys();
 var pvtKey = keyPair[0];
@@ -29,7 +35,10 @@ function createInputs(amount) {
       return;
     } else {
       // sign
-      const txHash = utils.getTransactionHash(JSON.stringify(utxo.transaction));
+      const temp = utxo.transaction;
+      utxo.transaction = null; // remove reference circle
+      const txHash = utils.getTransactionHash(JSON.stringify(temp));
+      utxo.transaction = temp;
       const opIdx = utxo.opIndex;
       const tuple = tx.createInput(txHash, opIdx, pvtKey, pubKey.toString('hex'));
       const input = tuple[0];
@@ -56,7 +65,7 @@ function createOutputs(totalAmount, amount, recPubKeyHash, pubKeyHash) {
   }
 }
 
-function createTransactions(inputs, outputs) {
+function createTransaction(inputs, outputs) {
   return tx.createTransaction(inputs, outputs);
 }
 
@@ -75,6 +84,7 @@ app.post('/send/:amount/:recPubKeyHash', function(req, res) {
 
   // create transaction
   const transaction = createTransaction(inputs, outputs);
+
   // propagate transactions
   console.log(JSON.stringify(transaction));
   res.sendStatus(200);
@@ -84,16 +94,16 @@ app.post('/transaction', function(req, res) {
   const transaction = req.body;
   // store outputs
   transaction.outputs.forEach(function(output, index) {
-    if (output.pubKeyHash === pubKeyHash) {
+    if (output.script.list[2] === pubKeyHash) {
+      const utxo = tx.createOutput(output.amount, pubKeyHash);
       utxo.transaction = transaction;
       utxo.opIndex = index;
-      utxos.push(output);
+      utxos.push(utxo);
     }
   });
-  // respond to changes transaction if any
   res.sendStatus(200);
 });
 
 app.listen(port, function() {
-  console.log(`wallet starts on port ${port}`);
+  console.log(`wallet starts on port ${port} with pubKeyHash ${pubKeyHash}`);
 });

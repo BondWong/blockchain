@@ -8,12 +8,12 @@ const crypto = require('crypto');
 const utils = require('../utils/utils.js');
 
 const port = process.env.FULLNODE_PORT || 3000;
-var blockchain = new Map();
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+var blockchain = new Map();
 
 // add block
 app.post('/block', function(req, res) {

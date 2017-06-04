@@ -28,6 +28,7 @@ Script.prototype.getSize = function() {
   const size = this.list.reduce((acc, ele) => {
     return acc + ele.length
   }, 0);
+  return size;
 }
 
 function createLockingScript(pubKeyHash) {
