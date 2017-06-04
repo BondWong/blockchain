@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const crypto = require('crypto');
 const bigInt = require('big-integer');
 const http = require('http');
+require('dotenv').config()
 
 const utils = require('../utils/utils.js');
 const {
@@ -13,7 +14,7 @@ const {
   Header
 } = require('../block/block.js');
 
-const port = process.env.MINER_PORT || 3001;
+const port = process.argv[2] || 4000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
@@ -24,6 +25,13 @@ const BLOCKTIME = 10000; // 10 seconds
 const HISTORICALTIMELENGTH = 50; // in reality, it is 2016
 const DIFF = 23;
 
+// hard coded but should implement gosip lookup
+const network = {
+  wallets: process.env.WALLETS.split(','),
+  miners: process.env.MINERS.split(','),
+  fullnodes: process.env.FULLNODES.split(',')
+};
+var txHashSet = new Set();
 var blockchain = new Map();
 var transactionCache = new Map();
 var preBlock = null;
@@ -166,8 +174,12 @@ app.post('/transaction', function(req, res) {
   // assume all transactions are structurally validated
   const transaction = req.body;
   const txHash = utils.getTransactionHash(JSON.stringify(transaction)).toString('hex');
-  // assume all transactions are new
-  // to-do: transaction script validation
+  // ignore visited transaction (prevent infinite propagation between network)
+  if (txHashSet.has(utils.getTransactionHash(JSON.stringify(transaction)))) {
+    res.sendStatus(304);
+    return;
+  }
+  txHashSet.add(txHash);
   // add to cache
   if (transactionCache.has(txHash)) {
     res.sendStatus(304);
@@ -178,6 +190,7 @@ app.post('/transaction', function(req, res) {
   if (block.transactions.length < MAXIMUM) {
     block.addTransaction(transaction);
   }
+  // propagate to the network
   res.sendStatus(200);
 });
 // add block
@@ -197,10 +210,12 @@ app.post('/block', function(req, res) {
   }
   // adding new block to blockchain
   receiveBlock(blockHash, block);
+  // propagate to the network
   res.sendStatus(200);
 });
 
 app.listen(port, function() {
   console.log(`miner starts on port ${port} and start mining`);
+  console.log(network);
   mining.start();
 });
