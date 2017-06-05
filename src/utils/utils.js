@@ -4,7 +4,7 @@ const crypto = require('crypto');
 var secp256k1 = require('secp256k1');
 const http = require('http');
 
-function propagate(data, host, port, path, logger) {
+function propagate(data, host, port, path, logger, msg) {
   const options = {
     hostname: host,
     port: port,
@@ -15,7 +15,8 @@ function propagate(data, host, port, path, logger) {
       'Content-Length': Buffer.byteLength(data)
     }
   };
-  http.request(options, (response) => {
+
+  const req = http.request(options, (response) => {
     const {
       statusCode
     } = response;
@@ -24,6 +25,8 @@ function propagate(data, host, port, path, logger) {
     if (statusCode !== 200) {
       error = new Error(`Request Failed.\n` +
         `Status Code: ${statusCode}`);
+    } else {
+      logger.log(msg);
     }
     if (error) {
       logger.error(error.message);
@@ -31,9 +34,16 @@ function propagate(data, host, port, path, logger) {
       response.resume();
       return;
     }
-  }).on('error', (e) => {
-    logger.error(`got error: ${e.message}`);
   });
+
+  req.on('error', (e) => {
+    logger.error(`problem with request: ${e.message}`);
+  });
+
+  // write data to request body
+  req.write(data);
+  req.end();
+  return req;
 }
 
 function generateKeys() {

@@ -9,6 +9,9 @@ const http = require('http');
 require('dotenv').config()
 
 const {
+  RequestManager
+} = require('../utils/request-manager.js');
+const {
   Logger
 } = require('../log/logger.js');
 const utils = require('../utils/utils.js');
@@ -18,7 +21,7 @@ const {
 } = require('../block/block.js');
 
 const port = process.argv[2] || 4000;
-const name = 'Miner:${port}'
+const name = `Miner:${port}`;
 const logger = new Logger(name);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -45,7 +48,8 @@ var diff = DIFF;
 var times = [];
 var nonce = bigInt();
 var target = bigInt(2).pow(256 - diff);
-var mining = {
+const propagationManager = new RequestManager();
+const mining = {
   request: null,
   restart: function() {
     if (this.request !== null) {
@@ -112,6 +116,11 @@ var mining = {
   },
 
   done: function(proofOfWork) {
+    // ignore block with no transactions
+    if (block.transactions.length === 0) {
+      mining.restart();
+      return;
+    }
     logger.log('found solution to POW');
     // update block
     block.header.setDiffTarget(target.toString());
@@ -119,7 +128,7 @@ var mining = {
     block.header.hash = proofOfWork[1];
     block.header.duration = proofOfWork[2];
     // append to blockchain
-    receiveBlock(utils.getBlockHash(JSON.stringify(block.header)).toString('hex'), block);
+    receiveBlock(utils.getBlockHash(JSON.stringify(block.header)), block);
   }
 
 };
@@ -171,18 +180,20 @@ function receiveBlock(blockHash, block) {
       if (temp[1] === port) {
         return;
       }
-      utils.propagate(body, temp[0], parseInt(temp[1]), '/block', logger);
+      const msg = `Block ${blockHash} propagates to ${temp[0]}:${temp[1]}`;
+      const req = utils.propagate(body, temp[0], parseInt(temp[1]), '/block', logger, msg);
+      propagationManager.append(req);
     });
   });
   // clean cache
-  logger.log(`clean transaction cache: ${transactionCache.length}`);
+  logger.log(`clean transaction cache: ${transactionCache.size}`);
   block.transactions.forEach(function(tx) {
     const txHash = utils.getTransactionHash(JSON.stringify(tx));
     if (transactionCache.has(txHash)) {
       transactionCache.delete(txHash);
     }
   });
-  logger.log(`cleaned transaction cache: ${transactionCache.length}`);
+  logger.log(`cleaned transaction cache: ${transactionCache.size}`);
   // update time window
   if (times.length == HISTORICALTIMELENGTH) {
     times.splice(0, 1);
@@ -197,7 +208,7 @@ app.post('/transaction', function(req, res) {
   logger.log('gets a transaction from the network');
   // assume all transactions are structurally validated
   const transaction = req.body;
-  const txHash = utils.getTransactionHash(JSON.stringify(transaction)).toString('hex');
+  const txHash = utils.getTransactionHash(JSON.stringify(transaction));
   // ignore visited transaction (prevent infinite propagation between network)
   if (txHashSet.has(utils.getTransactionHash(JSON.stringify(transaction)))) {
     logger.log('ignores already contained transaction');
@@ -227,7 +238,9 @@ app.post('/transaction', function(req, res) {
       if (temp[1] === port) {
         return;
       }
-      utils.propagate(body, temp[0], parseInt(temp[1]), '/transaction', logger);
+      const msg = `Transaction ${txHash} propagates to ${temp[0]}:${temp[1]}`;
+      const req = utils.propagate(body, temp[0], parseInt(temp[1]), '/transaction', logger, msg);
+      propagationManager.append(req);
     });
   });
   res.sendStatus(200);
@@ -237,7 +250,7 @@ app.post('/block', function(req, res) {
   logger.log('gets a block from the network');
   const block = req.body;
   // assume all blocks are structurally validated
-  const blockHash = utils.getBlockHash(JSON.stringify(block.header)).toString('hex');
+  const blockHash = utils.getBlockHash(JSON.stringify(block.header));
   if (blockchain.has(blockHash)) {
     logger.log('ignores block that is already appended to blockchain');
     res.sendStatus(304);
@@ -253,6 +266,21 @@ app.post('/block', function(req, res) {
   // adding new block to blockchain
   receiveBlock(blockHash, block);
   res.sendStatus(200);
+});
+
+app.get('/blockchain', function(req, res) {
+  var blocks = [];
+  blockchain.forEach(function(block) {
+    blocks.push(block);
+  });
+
+  res.send(JSON.stringify(blocks));
+});
+
+app.get('/block/:hash', function(req, res) {
+  const hash = req.params.hash;
+  const block = blockchain.get(hash);
+  res.send(JSON.stringify(block));
 });
 
 app.listen(port, function() {

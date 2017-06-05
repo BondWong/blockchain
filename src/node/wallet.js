@@ -12,9 +12,12 @@ const script = require('../transaction/script/script.js');
 const {
   Logger
 } = require('../log/logger.js');
+const {
+  RequestManager
+} = require('../utils/request-manager.js');
 
 const port = process.argv[2] || 3002;
-const name = 'WALLET:${port}';
+const name = `WALLET:${port}`;
 const logger = new Logger(name);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -33,6 +36,7 @@ var keyPair = utils.generateKeys();
 var pvtKey = keyPair[0];
 var pubKey = keyPair[1];
 var pubKeyHash = utils.generatePubKeyHash(pubKey);
+const propagationManager = new RequestManager();
 
 function createInputs(amount) {
   utxos.sort(function(a, b) {
@@ -103,10 +107,13 @@ app.post('/send/:amount/:recPubKeyHash', function(req, res) {
   // propagate transaction
   logger.log('propagate to the network');
   const body = JSON.stringify(transaction);
+  const txHash = utils.getTransactionHash(body);
   network.forEach(function(ips) {
     ips.forEach(function(ip) {
       const temp = ip.split(':');
-      utils.propagate(body, temp[0], parseInt(temp[1]), '/transaction', logger);
+      const msg = `Transaction ${txHash} propagates to ${temp[0]}:${temp[1]}`;
+      const req = utils.propagate(body, temp[0], parseInt(temp[1]), '/transaction', logger, msg);
+      propagationManager.append(req);
     });
   });
 
@@ -114,12 +121,12 @@ app.post('/send/:amount/:recPubKeyHash', function(req, res) {
 });
 
 app.post('/transaction', function(req, res) {
-  Logger.log('gets a transaction from the network');
+  logger.log('gets a transaction from the network');
   const transaction = req.body;
   // ignore visited transaction
   const txHash = utils.getTransactionHash(JSON.stringify(transaction));
   if (txHashSet.has(txHash)) {
-    Logger.log('ignores already visited transaction');
+    logger.log('ignores already visited transaction');
     res.sendStatus(304);
     return;
   }
@@ -127,7 +134,7 @@ app.post('/transaction', function(req, res) {
   // store outputs
   transaction.outputs.forEach(function(output, index) {
     if (output.script.list[2] === pubKeyHash) {
-      Logger.log('stores output sent to me');
+      logger.log('stores output sent to me');
       const utxo = tx.createOutput(output.amount, pubKeyHash);
       utxo.transaction = transaction;
       utxo.opIndex = index;
@@ -137,6 +144,15 @@ app.post('/transaction', function(req, res) {
   res.sendStatus(200);
 });
 
+app.get('/balance', function(req, res) {
+  var balance = 0;
+  utxos.forEach(function(utxo) {
+    balance += parseInt(utxo.amount);
+  });
+
+  res.send(`${name} balance:${balance}`);
+});
+
 app.listen(port, function() {
-  Logger.log(`starts with pubKeyHash of ${pubKeyHash}`);
+  logger.log(`starts with pubKeyHash of ${pubKeyHash}`);
 });
