@@ -4,7 +4,7 @@ const crypto = require('crypto');
 var secp256k1 = require('secp256k1');
 const http = require('http');
 
-function propagate(data, host, port, path) {
+function propagate(data, host, port, path, logger) {
   const options = {
     hostname: host,
     port: port,
@@ -22,17 +22,17 @@ function propagate(data, host, port, path) {
 
     let error;
     if (statusCode !== 200) {
-      error = new Error(`Wallet:${port} Request Failed.\n` +
+      error = new Error(`Request Failed.\n` +
         `Status Code: ${statusCode}`);
     }
     if (error) {
-      console.error(error.message);
+      logger.error(error.message);
       // consume response data to free up memory
       response.resume();
       return;
     }
   }).on('error', (e) => {
-    console.error(`Miner:${port} got error: ${e.message}`);
+    logger.error(`got error: ${e.message}`);
   });
 }
 

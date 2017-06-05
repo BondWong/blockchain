@@ -6,9 +6,14 @@ const bodyParser = require('body-parser');
 const crypto = require('crypto');
 require('dotenv').config()
 
+const {
+  Logger
+} = require('../log/logger.js');
 const utils = require('../utils/utils.js');
 
 const port = process.argv[2] || 5000;
+const name = 'FULLNODE:${port}';
+const logger = new Logger(name);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
@@ -25,16 +30,19 @@ var blockchain = new Map();
 
 // add block
 app.post('/block', function(req, res) {
+  Logger.log('gets a block from the network');
   const block = req.body;
   // assume all blocks are structurally validated
   const blockHash = utils.getBlockHash(JSON.stringify(block.header)).toString('hex');
   if (blockchain.has(blockHash)) {
+    Logger.log('ignores already contained block');
     res.sendStatus(304);
     return;
   }
   // append to blockchain
   blockchain.set(blockHash, block);
   // propagate to the network
+  logger.log('propagates to the network');
   const body = JSON.stringify(block);
   network.forEach(function(ips) {
     ips.forEach(function(ip) {
@@ -42,7 +50,7 @@ app.post('/block', function(req, res) {
       if (temp[1] === port) {
         return;
       }
-      utils.propagate(body, temp[0], parseInt(temp[1]), '/block')
+      utils.propagate(body, temp[0], parseInt(temp[1]), '/block', logger);
     });
   });
   res.sendStatus(200);
@@ -73,6 +81,5 @@ app.post('/transaction', function(req, res) {
 });
 
 app.listen(port, function() {
-  console.log(`full node starts on port ${port}`);
-  console.log(network);
+  Logger.log('starts');
 });
