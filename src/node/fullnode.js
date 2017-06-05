@@ -15,11 +15,11 @@ app.use(bodyParser.urlencoded({
 }));
 
 // hard coded but should implement gosip lookup
-const network = {
-  wallets: process.env.WALLETS.split(','),
-  miners: process.env.MINERS.split(','),
-  fullnodes: process.env.FULLNODES.split(',')
-};
+const network = new Map([
+  ['wallets', process.env.WALLETS.split(',')],
+  ['miners', process.env.MINERS.split(',')],
+  ['fullnodes', process.env.FULLNODES.split(',')]
+]);
 var txHashSet = new Set();
 var blockchain = new Map();
 
@@ -35,6 +35,16 @@ app.post('/block', function(req, res) {
   // append to blockchain
   blockchain.set(blockHash, block);
   // propagate to the network
+  const body = JSON.stringify(block);
+  network.forEach(function(ips) {
+    ips.forEach(function(ip) {
+      const temp = ip.split(':');
+      if (parseInt(temp[1]) === port) {
+        return;
+      }
+      utils.propagate(body, temp[0], parseInt(temp[1]), '/block')
+    });
+  });
   res.sendStatus(200);
 });
 // add transaction
@@ -49,6 +59,16 @@ app.post('/transaction', function(req, res) {
   }
   txHashSet.add(txHash);
   // propagate to the network
+  const body = JSON.stringify(transaction);
+  network.forEach(function(ips) {
+    ips.forEach(function(ip) {
+      const temp = ip.split(':');
+      if (parseInt(temp[1]) === port) {
+        return;
+      }
+      utils.propagate(body, temp[0], parseInt(temp[1]), '/transaction')
+    });
+  });
   res.sendStatus(200);
 });
 

@@ -3,7 +3,6 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const http = require('http');
 const crypto = require('crypto');
 require('dotenv').config()
 
@@ -18,10 +17,10 @@ app.use(bodyParser.urlencoded({
 }));
 
 // hard coded but should implement gosip lookup
-const network = {
-  miners: process.env.MINERS.split(','),
-  fullnodes: process.env.FULLNODES.split(',')
-};
+const network = new Map([
+  ['miners', process.env.MINERS.split(',')],
+  ['fullnodes', process.env.FULLNODES.split(',')]
+]);
 // instead of looking up at the blockchain, I simply store all arrived tx hash
 var txHashSet = new Set();
 var utxos = []; // outputs with reference to the transaction and its index in the transaction
@@ -95,35 +94,11 @@ app.post('/send/:amount/:recPubKeyHash', function(req, res) {
 
   // propagate transaction
   const body = JSON.stringify(transaction);
-  console.log(body);
-  const options = {
-    hostname: 'localhost',
-    port: 3000,
-    path: '/transaction',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Content-Length': Buffer.byteLength(body);
-    }
-  }
-  http.request(options, (response) => {
-    const {
-      statusCode
-    } = response;
-
-    let error;
-    if (statusCode !== 200) {
-      error = new Error(`Wallet:${port} Request Failed.\n` +
-        `Status Code: ${statusCode}`);
-    }
-    if (error) {
-      console.error(error.message);
-      // consume response data to free up memory
-      response.resume();
-      return;
-    }
-  }).on('error', (e) => {
-    console.error(`Miner:${port} got error: ${e.message}`);
+  network.forEach(function(ips) {
+    ips.forEach(function(ip) {
+      const temp = ip.split(':');
+      utils.propagate(body, temp[0], parseInt(temp[1]), '/transaction')
+    });
   });
 
   res.sendStatus(200);
@@ -132,7 +107,8 @@ app.post('/send/:amount/:recPubKeyHash', function(req, res) {
 app.post('/transaction', function(req, res) {
   const transaction = req.body;
   // ignore visited transaction
-  if (txHashSet.has(utils.getTransactionHash(JSON.stringify(transaction)))) {
+  const txHash = utils.getTransactionHash(JSON.stringify(transaction));
+  if (txHashSet.has(txHash)) {
     res.sendStatus(304);
     return;
   }

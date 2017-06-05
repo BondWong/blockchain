@@ -2,6 +2,39 @@
 
 const crypto = require('crypto');
 var secp256k1 = require('secp256k1');
+const http = require('http');
+
+function propagate(data, host, port, path) {
+  const options = {
+    hostname: host,
+    port: port,
+    path: path,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(data)
+    }
+  };
+  http.request(options, (response) => {
+    const {
+      statusCode
+    } = response;
+
+    let error;
+    if (statusCode !== 200) {
+      error = new Error(`Wallet:${port} Request Failed.\n` +
+        `Status Code: ${statusCode}`);
+    }
+    if (error) {
+      console.error(error.message);
+      // consume response data to free up memory
+      response.resume();
+      return;
+    }
+  }).on('error', (e) => {
+    console.error(`Miner:${port} got error: ${e.message}`);
+  });
+}
 
 function generateKeys() {
   var pvtKey, pubKey;
@@ -43,3 +76,4 @@ exports.getBlockHash = getBlockHash;
 exports.getTransactionHash = getTransactionHash;
 exports.sha256 = sha256;
 exports.getHash = getHash;
+exports.propagate = propagate;
