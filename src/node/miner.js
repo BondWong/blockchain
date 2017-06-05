@@ -152,7 +152,16 @@ function receiveBlock(blockHash, block) {
   // update pre block
   preBlock = block;
   // propagate
-  console.log(JSON.stringify(block));
+  const body = JSON.stringify(block);
+  network.forEach(function(ips) {
+    ips.forEach(function(ip) {
+      const temp = ip.split(':');
+      if (temp[1] === port) {
+        return;
+      }
+      utils.propagate(body, temp[0], parseInt(temp[1]), '/block')
+    });
+  });
   // clean cache
   block.transactions.forEach(function(tx) {
     const txHash = utils.getTransactionHash(JSON.stringify(tx));
@@ -195,7 +204,7 @@ app.post('/transaction', function(req, res) {
   network.forEach(function(ips) {
     ips.forEach(function(ip) {
       const temp = ip.split(':');
-      if (parseInt(temp[1]) === port) {
+      if (temp[1] === port) {
         return;
       }
       utils.propagate(body, temp[0], parseInt(temp[1]), '/transaction')
@@ -220,17 +229,6 @@ app.post('/block', function(req, res) {
   }
   // adding new block to blockchain
   receiveBlock(blockHash, block);
-  // propagate to the network
-  const body = JSON.stringify(block);
-  network.forEach(function(ips) {
-    ips.forEach(function(ip) {
-      const temp = ip.split(':');
-      if (parseInt(temp[1]) === port) {
-        return;
-      }
-      utils.propagate(body, temp[0], parseInt(temp[1]), '/block')
-    });
-  });
   res.sendStatus(200);
 });
 

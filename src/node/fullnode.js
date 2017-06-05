@@ -39,7 +39,7 @@ app.post('/block', function(req, res) {
   network.forEach(function(ips) {
     ips.forEach(function(ip) {
       const temp = ip.split(':');
-      if (parseInt(temp[1]) === port) {
+      if (temp[1] === port) {
         return;
       }
       utils.propagate(body, temp[0], parseInt(temp[1]), '/block')
@@ -63,7 +63,7 @@ app.post('/transaction', function(req, res) {
   network.forEach(function(ips) {
     ips.forEach(function(ip) {
       const temp = ip.split(':');
-      if (parseInt(temp[1]) === port) {
+      if (temp[1] === port) {
         return;
       }
       utils.propagate(body, temp[0], parseInt(temp[1]), '/transaction')
