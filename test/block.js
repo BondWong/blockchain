@@ -24,7 +24,7 @@ describe('Block', function() {
       var txHash = crypto.randomBytes(32);
       var outputIdx = crypto.randomBytes(4);
       var output = tx.createOutput(2, pubKeyHash);
-      var input = tx.createInput(txHash, outputIdx, sig.signature, pubKey);
+      var input = tx.createInput(txHash, outputIdx, pvtKey, pubKey);
       var transaction = tx.createTransaction([input], [output]);
 
       var header = new Header();
@@ -37,7 +37,6 @@ describe('Block', function() {
 
       var block = new Block(header);
       block.addTransaction(transaction);
-      block.getSize();
     })
   });
 
@@ -53,7 +52,7 @@ describe('Block', function() {
       var txHash = crypto.randomBytes(32);
       var outputIdx = crypto.randomBytes(4);
       var output = tx.createOutput(2, pubKeyHash);
-      var input = tx.createInput(txHash, outputIdx, sig.signature, pubKey);
+      var input = tx.createInput(txHash, outputIdx, pvtKey, pubKey);
       var transaction = tx.createTransaction([input], [output]);
 
       var header = new Header();
@@ -81,7 +80,7 @@ describe('Block', function() {
       var txHash = crypto.randomBytes(32);
       var outputIdx = crypto.randomBytes(4);
       var output = tx.createOutput(2, pubKeyHash);
-      var input = tx.createInput(txHash, outputIdx, sig.signature, pubKey);
+      var input = tx.createInput(txHash, outputIdx, pvtKey, pubKey);
       var transaction = tx.createTransaction([input], [output]);
 
       var header = new Header();
